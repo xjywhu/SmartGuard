@@ -1,227 +1,95 @@
 # Make Your Home Safe: Time-aware Unsupervised User Behavior Anomaly Detection in Smart Homes via Loss-guided Mask
 
-
-[Jingyu Xiao](https://whalexiao.github.io/), [Zhiyao Xu](http://yuh-yang.github.io), [Qingsong Zou](#), [Qing Li](#) (*Correspondence )
-
-
------
-
-
 ## Introduction
-Smart homes, powered by the Internet of Things, offer great convenience but also pose security concerns due to abnormal behaviors, such as improper operations of users and potential attacks from malicious attackers. Several behavior modeling methods have been proposed to identify abnormal behaviors and mitigate potential risks. However, their performance often falls short because they do not consider temporal context, effectively learn less frequent behaviors, or account for the impact of noise in human behaviors. In this paper, we propose SmartGuard, an autoencoder-based unsupervised user behavior anomaly detection framework. First, we propose Three-level Time-aware Position Embedding (TTPE) to incorporate temporal information into positional embedding to detect temporal context anomaly. Second, we design a Loss-guided Dynamic Mask Strategy (LDMS) to encourage the model to learn less frequent behaviors, which are often overlooked during learning. Third, we propose a Noise-aware Weighted Reconstruction Loss (NWRL) to assign different weights for routine behaviors and noise behaviors to mitigate the impact of noise behaviors. Comprehensive experiments on four datasets with ten types of anomaly behaviors demonstrates that SmartGuard consistently outperforms state-of-the-art baselines and also offers highly interpretable results.
+Smart homes, powered by the Internet of Things, offer great convenience but also pose security concerns due to abnormal behaviors, such as improper operations of users and potential attacks from malicious attackers. Several behavior modeling methods have been proposed to identify abnormal behaviors and mitigate potential risks. However, their performance often falls short because they do not effectively learn less frequent behaviors, consider temporal context, or account for the impact of noise in human behaviors. In this paper, we propose SmartGuard, an autoencoder-based unsupervised user behavior anomaly detection framework. First, we design a Loss-guided Dynamic Mask Strategy (LDMS) to encourage the model to learn less frequent behaviors, which are often overlooked during learning. Second, we propose a Three-level Time-aware Position Embedding (TTPE) to incorporate temporal information into positional embedding to detect temporal context anomaly. Third, we propose a Noise-aware Weighted Reconstruction Loss (NWRL) that assigns different weights for routine behaviors and noise behaviors to mitigate the interference of noise behaviors during inference. Comprehensive experiments on three datasets with ten types of anomaly behaviors demonstrates that SmartGuard consistently outperforms state-of-the-art baselines and also offers highly interpretable results.
 
-#### 0. Environment Update: 
+![Method](./figures/SmartGuard.png)
 
-The lightweight training requires PyTorch 2.1+, so we need to update corresponding libraries: 
 
-```shell
-# if you have set up the env for GraphGPT earlier
-pip uninstall torch
-pip uninstall torchvision
-pip uninstall torchaudio
-# CUDA 11.8
-pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu118
+## Environment Setup
 
-# update pyg for the PyTorch 2.1+
-pip install torch_geometric
-pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.1.0+cu118.html
-
-# install lightning
-pip install lightning
-```
-
-#### 1. Update the Graph Data
-
-Due to compatibility issues, if you are using the previously released graph data, we recommend downloading and updating it according to the provided link: [updated graph data](https://huggingface.co/datasets/Jiabin99/All_pyg_graph_data).
-
-#### 2. Run the Baselines
-
-You can run the scripts as follow:
-
-**Stage-1:**
-
-```shell
-python other_baseline.py
-```
-
-**Stage-2:**
-
-```
-cd path/to/GraphGPT
-sh ./scripts/tune_script/graphgpt_stage2.sh
+```bash
+# python==3.8
+pip install torch==1.10.1+cu113 torchvision==0.11.2+cu113 torchaudio==0.10.1 -f https://download.pytorch.org/whl/cu113/torch_stable.html
+pip install dgl==1.0.0+cu113 -f https://data.dgl.ai/wheels/cu113/repo.html
+pip install scikit-learn
 ```
 
 
-## Brief Introduction 
+## TGAT + TGSL
+
+For TGAT, we use the official implementation codes: [TGAT](https://github.com/StatsDLMathsRecomSys/Inductive-representation-learning-on-temporal-graphs)
+
+### Datasets & Pre-processing
+
+Download the Wikipedia and Reddit datasets from [here](http://snap.stanford.edu/jodie/) and Escorts from [here](https://networkrepository.com/escorts.php). Save the downloaded files in the `data/` folder.
 
 
-For more technical details, kindly refer to the [paper](https://arxiv.org/abs/2310.13023) and the project [website](https://graphgpt.github.io/) of our Graph. 
+Run the following commands to pre-process datasets.
 
-
------------
-
-<span id='Usage'/>
-
-## Getting Started
-
-<span id='all_catelogue'/>
-
-### Table of Contents:
-* <a href='#Code Structure'>1. Code Structure</a>
-* <a href='#Environment Preparation'>2. Environment Preparation </a>
-* <a href='#Training GraphGPT'>3. Training GraphGPT </a>
-  * <a href='#Prepare Pre-trained Checkpoint'>3.1. Prepare Pre-trained Checkpoint</a>
-  * <a href='#Self-Supervised Instruction Tuning'>3.2. Self-Supervised Instruction Tuning</a>
-  * <a href='#Extract the Trained Projector'>3.3. Extract the Trained Projector</a>
-  * <a href='#Task-Specific Instruction Tuning'>3.4. Task-Specific Instruction Tuning</a>
-* <a href='#Evaluating GraphGPT'>4. Evaluating GraphGPT</a>
-  * <a href='#Preparing Checkpoints and Data'>4.1. Preparing Checkpoints and Data</a>
-  * <a href='#Running Evaluation'>4.2. Running Evaluation</a>
-
-****
-
-
-
-<span id='Code Structure'/>
-
-### 1. Code Structure <a href='#all_catelogue'>[Back to Top]</a>
-
-```
-.
-├── README.md
-├── assets
-│   ├── demo_narrow.gif
-│   ├── screenshot_cli.png
-│   ├── screenshot_gui.png
-│   ├── server_arch.png
-│   └── vicuna_logo.jpeg
-├── format.sh
-├── graphgpt
-│   ├── __init__.py
-│   ├── constants.py
-│   ├── conversation.py
-│   ├── eval
-│   │   ├── README.md
-│   │   ├── requirements.txt
-│   │   ├── run_graphgpt.py
-│   │   ├── run_graphgpt_LP.py
-│   │   ├── run_vicuna.py
-│   │   └── script
-│   │       └── run_model_qa.yaml
-│   ├── model
-│   │   ├── GraphLlama.py
-│   │   ├── __init__.py
-│   │   ├── apply_delta.py
-│   │   ├── apply_lora.py
-│   │   ├── builder.py
-│   │   ├── compression.py
-│   │   ├── convert_fp16.py
-│   │   ├── graph_layers
-│   │   │   ├── __init__.py
-│   │   │   ├── bpe_simple_vocab_16e6.txt.gz
-│   │   │   ├── clip_graph.py
-│   │   │   ├── graph_transformer.py
-│   │   │   ├── mpnn.py
-│   │   │   └── simple_tokenizer.py
-│   │   ├── make_delta.py
-│   │   ├── model_adapter.py
-│   │   ├── model_registry.py
-│   │   ├── monkey_patch_non_inplace.py
-│   │   └── utils.py
-│   ├── protocol
-│   │   └── openai_api_protocol.py
-│   ├── serve
-│   │   ├── __init__.py
-│   │   ├── api_provider.py
-│   │   ├── bard_worker.py
-│   │   ├── cacheflow_worker.py
-│   │   ├── cli.py
-│   │   ├── controller.py
-│   │   ├── gateway
-│   │   │   ├── README.md
-│   │   │   └── nginx.conf
-│   │   ├── gradio_block_arena_anony.py
-│   │   ├── gradio_block_arena_named.py
-│   │   ├── gradio_css.py
-│   │   ├── gradio_patch.py
-│   │   ├── gradio_web_server.py
-│   │   ├── gradio_web_server_multi.py
-│   │   ├── huggingface_api.py
-│   │   ├── inference.py
-│   │   ├── model_worker.py
-│   │   ├── monitor
-│   │   │   ├── basic_stats.py
-│   │   │   ├── clean_battle_data.py
-│   │   │   ├── elo_analysis.py
-│   │   │   ├── hf_space_leaderboard_app.py
-│   │   │   └── monitor.py
-│   │   ├── openai_api_server.py
-│   │   ├── register_worker.py
-│   │   ├── test_message.py
-│   │   └── test_throughput.py
-│   ├── train
-│   │   ├── graphchat_trainer.py
-│   │   ├── llama_flash_attn_monkey_patch.py
-│   │   ├── train_graph.py
-│   │   ├── train_lora.py
-│   │   └── train_mem.py
-│   └── utils.py
-├── playground
-│   ├── inspect_conv.py
-│   ├── test_embedding
-│   │   ├── README.md
-│   │   ├── test_classification.py
-│   │   ├── test_semantic_search.py
-│   │   └── test_sentence_similarity.py
-│   └── test_openai_api
-│       ├── anthropic_api.py
-│       └── openai_api.py
-├── pyproject.toml
-├── scripts
-│   ├── eval_script
-│   │   └── graphgpt_eval.sh
-│   ├── extract_graph_projector.py
-│   ├── serving
-│   │   ├── controller.yaml
-│   │   └── model_worker.yaml
-│   └── tune_script
-│       ├── extract_projector.sh
-│       ├── graphgpt_stage1.sh
-│       └── graphgpt_stage2.sh
-└── tests
-    ├── test_openai_curl.sh
-    ├── test_openai_langchain.py
-    └── test_openai_sdk.py
+```bash
+# wikipedia
+python process.py --dataset wikipedia
+# reddit
+python process.py --dataset reddit
+# escorts
+python process.py --dataset escorts
 ```
 
 
-<span id='Environment Preparation'/>
+### Training & Evaluation
+
+Run the following commands to start training and evaluation.
+
+```bash
+# wikipedia
+python train.py --dataset wikipedia --uniform --agg_method attn --attn_mode prod --cuda 0 --prefix tgat_tgsl_wiki --seed 2023 --tau 0.1 --ratio 0.8 --can_type 1st --can_nn 10 --rnn_layer 3 --coe 0.2 --K 512 --gtau 1.0
+# reddit
+python train.py --dataset reddit --uniform --agg_method attn --attn_mode prod --cuda 0 --prefix tgat_tgsl_reddit --seed 2023 --tau 0.1 --ratio 0.4 --can_type 1st --can_nn 20 --rnn_layer 1 --coe 0.2 --K 512 --gtau 1.0
+# escorts
+python train.py --dataset escorts --uniform --agg_method attn --attn_mode prod --cuda 0 --prefix tgat_tgsl_escorts --seed 2023 --tau 0.1 --ratio 0.064 --can_type 3rd --can_nn 5 --rnn_layer 1 --coe 0.7 --K 512 --gtau 1.0
+```
 
 
+## GraphMixer + TGSL
+
+For GraphMixer, we use [DyGLib](https://github.com/yule-BUAA/DyGLib) to implement TGSL under both transductive and inductive settings. 
+
+GraphMixer official implementation: [GraphMixer](https://github.com/CongWeilin/GraphMixer)
+
+### Datasets & Pre-processing
+
+The same as TGAT + TGSL.
 
 
+### Training & Evaluation
+
+Run the following commands to start training and evaluation.
 
 
-## Contact
-For any questions or feedback, feel free to contact [Jingyu Xiao](mailto:jy-xiao21@mails.tsinghua.edu.cn).
+```bash
+# wikipedia
+python train_link_prediction.py --dataset_name wikipedia --prefix graphmixer_tgsl_wiki --log_name graphmixer_tgsl_wiki --model_name GraphMixer --load_best_configs --num_runs 1 --gpu 0 --tau 0.1 --ratio 0.008 --can_nn 10 --can_type 3rd --rnn_layer 1 --coe 0.2 --K 512 --gtau 1.0
+# reddit
+python train_link_prediction.py --dataset_name reddit --prefix graphmixer_tgsl_reddit --log_name graphmixer_tgsl_reddit --model_name GraphMixer --load_best_configs --num_runs 1 --gpu 0 --tau 0.1 --ratio 0.4 --can_nn 20 --can_type 1st --rnn_layer 2 --coe 0.2 --K 512 --gtau 1.0
+# escorts
+python train_link_prediction.py --dataset_name escorts --prefix graphmixer_tgsl_escorts --log_name graphmixer_tgsl_escorts --model_name GraphMixer --load_best_configs --num_runs 1 --gpu 0 --tau 0.1 --ratio 0.002 --can_nn 20 --can_type 3rd --rnn_layer 1 --coe 0.2 --K 512 --gtau 1.0
+```
+
+
+## Acknowledgments
+
+Thanks to the publicly released codes of [TGAT](https://github.com/StatsDLMathsRecomSys/Inductive-representation-learning-on-temporal-graphs) and [DyGLib](https://github.com/yule-BUAA/DyGLib), we implement TGSL based on them. 
+
 
 
 ## Citation
 
-If you find SmartGuard useful in your research or applications, please kindly cite:
-```tex
-@articles{xiao2023smartguard,
-title={}, 
-author={Jingyu Xiao},
-year={2024},
-eprint={xxxxxxx},
-archivePrefix={arXiv},
-primaryClass={cs.CL}
+```bibtex
+@article{SmartGuard,
+  title={Make Your Home Safe: Time-aware Unsupervised User Behavior Anomaly Detection in Smart Homes via Loss-guided Mask},
+  author={},
+  journal={KDD'24},
+  year={2024}
 }
 ```
-
-
-
-## Acknowledgements
-You may refer to related work that serves as foundations for our framework and code repository, 
-[Vicuna](https://github.com/lm-sys/FastChat), [LLaVa](https://github.com/haotian-liu/LLaVA), We also partially draw inspirations from [MiniGPT-4](https://github.com/Vision-CAIR/MiniGPT-4). For the text-graph grounding design, we leverages implementation from [G2P2](https://github.com/WenZhihao666/G2P2). The design of our website and README.md was inspired by [NExT-GPT](https://next-gpt.github.io/). Thanks for their wonderful works.
