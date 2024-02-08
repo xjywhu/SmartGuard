@@ -8,7 +8,7 @@ import pickle
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, confusion_matrix
 import argparse
 
-vocab_dic = {"an": 141, "fr": 222, "us": 268, "sp": 234}
+vocab_dic = {"an": 141, "fr": 222, "sp": 234}
 
 
 class MarkovChain():
@@ -28,17 +28,11 @@ class MarkovChain():
         # transition_matrix = np.zeros((n_states, n_states))
         transition_matrix = np.ones((n_states, n_states)) * 1e-10
 
-        # 计算转移矩阵
         for sequence in sequences:
             for i in range(len(sequence) - 1):
                 state_from, state_to = sequence[i], sequence[i + 1]
-                # print(state_from, state_to)
-                # if state_to == 228:
-                #     print(state_to)
-                # print(sequence)
                 transition_matrix[state_index[state_from]][state_index[state_to]] += 1
 
-        # 归一化转移矩阵
         transition_matrix /= transition_matrix.sum(axis=1, keepdims=True)
 
         self.transition_matrix = transition_matrix
@@ -56,7 +50,7 @@ def get_args_parser():
     parser = argparse.ArgumentParser('MAE pre-training', add_help=False)
     # Model parameters
     parser.add_argument('--model', default='OCSVM', type=str, metavar='MODEL',
-                        help='Name of model to train: GMM/NB/LocalOutlierFactor/IsolationForest/Autoencoder/MC/OCSVM')
+                        help='Name of model to train: GMM/NB/LocalOutlierFactor/IsolationForest/MC/OCSVM')
     parser.add_argument('--dataset', default='fr', type=str, metavar='MODEL',
                         help='Name of dataset to train: an/fr/us/sp')
     parser.add_argument('--attack', default='SD', type=str, metavar='type',
@@ -68,10 +62,7 @@ def make_data():
     with open(train_file1, 'rb') as file1:
         X_trn_r1 = pickle.load(file1)
 
-    # with open(train_file2, 'rb') as file4:
-    #     X_trn_r2 = pickle.load(file4)
-    # with open('us_television_attack.pkl', 'rb') as file3:
-    #     X_e = pickle.load(file3)
+
     if args.attack == 'SD':
         with open(f"data/{args.dataset}_data/attack/{args.dataset}_light_attack.pkl", 'rb') as file3:
             X_e1 = pickle.load(file3)
@@ -113,8 +104,7 @@ def make_data():
                 X_e1 = pickle.load(file3)
         X_test_e = X_e1
 
-    # with open(f'{args.dataset}_add_blind_attack.pkl', 'rb') as file3:
-    #     X_e2 = pickle.load(file3)
+
     with open(test_file2, 'rb') as file2:
         X_test_r = pickle.load(file2)
 
@@ -152,7 +142,6 @@ def train(args):
         X_test = np.array(X_test)
         X_test = X_test[:, 3:40:4]
         y_pred_test = model.fit_predict(X_test)
-        # print("测试集异常值预测:", y_pred_test)
 
 
     elif args.model == "NB":
@@ -169,8 +158,6 @@ def train(args):
         y_pred_test = model.predict(X_test)
         # print(y_pred_test)
 
-        # print("测试集异常值预测:", y_pred_test)
-
 
     elif args.model == "LocalOutlierFactor":
         X_train, X_test_r, X_test_e = make_data()
@@ -184,7 +171,6 @@ def train(args):
         y_pred_test = np.array(y_pred_test)
         y_pred_test[np.where(y_pred_test == 1)] = 0
         y_pred_test[np.where(y_pred_test == -1)] = 1
-        # print("测试集异常值预测:", y_pred_test)
 
 
     elif args.model == "IsolationForest":
@@ -194,9 +180,7 @@ def train(args):
 
         X_test = np.array(X_test)
         X_test = X_test[:, 3:40:4]
-        # 将一些数据点标记为异常值
         model = IsolationForest(contamination='auto', random_state=2023)
-        # 预测异常值
         y_pred_test = model.fit_predict(X_test)
         y_pred_test = np.array(y_pred_test)
         y_pred_test[np.where(y_pred_test == 1)] = 0
@@ -220,9 +204,6 @@ def train(args):
         model = MarkovChain(state_number=vocab_dic[args.dataset])
         model.fit(X_train)
 
-        # 检测异常
-        # threshold = 0.00001  # 定义阈值
-        # sp: 0.2 us:
         threshold = 0.2
         y_pred_test = []
         for sequence in X_test:
@@ -232,8 +213,6 @@ def train(args):
                 y_pred_test.append(1)
             else:
                 y_pred_test.append(-1)
-
-        # count_cm(labels, y_pred_test)
 
     elif args.model == "OCSVM":
         X_train, X_test_r, X_test_e = make_data()
@@ -247,7 +226,6 @@ def train(args):
         y_pred_test = model.fit_predict(X_test)
         y_pred_test[np.where(y_pred_test == 1)] = 0
         y_pred_test[np.where(y_pred_test == -1)] = 1
-        # print("测试集异常值预测:", y_pred_test)
 
     return count_cm(labels, y_pred_test)
 
@@ -271,11 +249,10 @@ if __name__ == "__main__":
         args.model = model
         for dataset in datasets:
             args.dataset = dataset
-            train_file1 = f"data/{args.dataset}_data/deleted_flattened_useful_{args.dataset}_trn_instance_10.pkl"
+            train_file1 = f"data/{args.dataset}_data/{args.dataset}_trn_instance_10.pkl"
             train_file2 = f"data/{args.dataset}_data/{args.dataset}_add_trn.pkl"
-            vld_file = f"data/{args.dataset}_data/deleted_flattened_useful_{args.dataset}_vld_instance_10.pkl"
-            # test_file1 = f"data/{args.dataset}_data/attack/{args.dataset}_television_attack.pkl"
-            test_file2 = f"data/{args.dataset}_data/deleted_flattened_useful_{args.dataset}_test_instance_10.pkl"
+            vld_file = f"data/{args.dataset}_data/{args.dataset}_vld_instance_10.pkl"
+            test_file2 = f"data/{args.dataset}_data/{args.dataset}_test_instance_10.pkl"
 
             for attack_type in ["SD", "MD", "DM", "DD"]:
                 args.attack = attack_type
@@ -283,13 +260,3 @@ if __name__ == "__main__":
                 tmp = {model: res}
                 results.append(tmp)
                 print(tmp)
-    # with open("results/res.json", "w") as file_res:
-    #     file_res.write(json.dumps(results))
-    # args.model = model
-    # print(args)
-    # import time
-    #
-    # t1 = time.time()
-    # train(args)
-    # t2 = time.time()
-    # print('time:', t2 - t1)

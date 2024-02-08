@@ -18,7 +18,7 @@ def find_next_occurrence_at_indices(arr, target, indices, i):
     return first_occurrence
 
 def _compute_duration_embeddings(input_ids: torch.Tensor, embedding_dim) -> torch.Tensor:
-    persistence_indices = [2, 6, 10, 14, 18, 22, 26, 30, 34, 38]  # 关注的索引位置
+    persistence_indices = [2, 6, 10, 14, 18, 22, 26, 30, 34, 38]
     seq_len = 40
     duration_embeddings = torch.zeros(int(seq_len/4), device=input_ids.device)
     time_embeddings = torch.zeros(int(seq_len/4), device=input_ids.device)
@@ -33,7 +33,6 @@ def _compute_duration_embeddings(input_ids: torch.Tensor, embedding_dim) -> torc
             time_embeddings[i + 1] = day_embeddings[i + 1] * 24 + hour_embeddings[i + 1] * 3 - day_embeddings[i] * 24 - \
                                      hour_embeddings[i] * 3 + 168 + time_embeddings[i]
 
-    # 将 tensor 转换为普通数字列表
     input_seq = input_ids
     behavior_list = []
     intro_time = []
@@ -55,8 +54,8 @@ def _compute_duration_embeddings(input_ids: torch.Tensor, embedding_dim) -> torc
     # scaled_duration = torch.tensor(scaled_duration)
     scaled_duration = scaled_duration.clone().detach()
     sinusoidal_duration_embedding = torch.zeros(int(seq_len/4), embedding_dim, device=input_ids.device)
-    sinusoidal_duration_embedding[:, 0::2] = scaled_duration  # 正弦波
-    sinusoidal_duration_embedding[:, 1::2] = scaled_duration # 余弦波
+    sinusoidal_duration_embedding[:, 0::2] = scaled_duration
+    sinusoidal_duration_embedding[:, 1::2] = scaled_duration
 
     return sinusoidal_duration_embedding
 
@@ -69,19 +68,14 @@ class TimeSeriesDataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, index):
-        # 获取数据
         sample = self.data[index]
         # device_control = sample.reshape(10, 4).T[3]
         device_control = sample.reshape(10, 4).T[3]
         # device_control = device_control.reshape(10, 1)
 
-        # 编码器和解码器的输入都为相同的数据
         encoder_input = sample
         decoder_output = device_control
 
-        # 将 numpy 数组转换为 PyTorch 的张量
-        # encoder_input = torch.from_numpy(encoder_input).float()
-        # decoder_output = torch.from_numpy(decoder_output).float()
         encoder_input = torch.from_numpy(encoder_input)
         decoder_output = torch.from_numpy(decoder_output)
         duration_input = _compute_duration_embeddings(encoder_input, self.embedding_dim)
@@ -91,8 +85,7 @@ class TimeSeriesDataset(Dataset):
 
 class PegasusSinusoidalPositionalEmbedding(nn.Embedding):
     def __init__(self, num_positions: int, embedding_dim: int) -> None:
-        # 确保嵌入维度是偶数，以简化处理
-        assert embedding_dim % 2 == 0, "嵌入维度必须是偶数。"
+
         super().__init__(num_positions, embedding_dim)
 
         self.persistence_indices = [2, 6, 10, 14, 18, 22, 26, 30, 34, 38]  # 关注的索引位置
@@ -122,18 +115,12 @@ class PegasusSinusoidalPositionalEmbedding(nn.Embedding):
         order_embeddings = torch.arange(0, int(seq_len/4)).unsqueeze(1).repeat(bsz, 1).reshape(bsz, int(seq_len/4))
         order_embeddings = order_embeddings.to(input_ids.device)
 
-        # for b in range(bsz):
-        #     # 确定绝对时间编码
-        #     for idx in range(1, 10):
-        #         order_embeddings[b, idx] = idx
-
-        # 正弦余弦化持续性嵌入
         scaled_order = (order_embeddings.unsqueeze(2) * torch.exp(
             torch.arange(0, self.embedding_dim, 2, dtype=torch.float, device=input_ids.device) * -(
                     np.log(10000.0) / self.embedding_dim))).float()
         sinusoidal_order_embedding = torch.zeros(bsz, int(seq_len/4), self.embedding_dim, device=input_ids.device)
-        sinusoidal_order_embedding[:, :, 0::2] = torch.sin(scaled_order)  # 正弦波
-        sinusoidal_order_embedding[:, :, 1::2] = torch.cos(scaled_order)  # 余弦波
+        sinusoidal_order_embedding[:, :, 0::2] = torch.sin(scaled_order)
+        sinusoidal_order_embedding[:, :, 1::2] = torch.cos(scaled_order)
 
         return sinusoidal_order_embedding
 
@@ -141,13 +128,12 @@ class PegasusSinusoidalPositionalEmbedding(nn.Embedding):
         bsz, seq_len = input_ids.size()
         day_embeddings = input_ids[:, 0:37:4]
 
-        # 正弦余弦化持续性嵌入
         scaled_day = (day_embeddings.unsqueeze(2) * torch.exp(
             torch.arange(0, self.embedding_dim, 2, dtype=torch.float, device=input_ids.device) * -(
                         np.log(10000.0) / self.embedding_dim))).float()
         sinusoidal_day_embedding = torch.zeros(bsz, int(seq_len/4), self.embedding_dim, device=input_ids.device)
-        sinusoidal_day_embedding[:, :, 0::2] = torch.sin(scaled_day)  # 正弦波
-        sinusoidal_day_embedding[:, :, 1::2] = torch.cos(scaled_day)  # 余弦波
+        sinusoidal_day_embedding[:, :, 0::2] = torch.sin(scaled_day)
+        sinusoidal_day_embedding[:, :, 1::2] = torch.cos(scaled_day)
 
         return day_embeddings, sinusoidal_day_embedding
 
@@ -160,49 +146,32 @@ class PegasusSinusoidalPositionalEmbedding(nn.Embedding):
             torch.arange(0, self.embedding_dim, 2, dtype=torch.float, device=input_ids.device) * -(
                         np.log(10000.0) / self.embedding_dim))).float()
         sinusoidal_hour_embedding = torch.zeros(bsz, int(seq_len/4), self.embedding_dim, device=input_ids.device)
-        sinusoidal_hour_embedding[:, :, 0::2] = torch.sin(scaled_hour)  # 正弦波
-        sinusoidal_hour_embedding[:, :, 1::2] = torch.cos(scaled_hour)  # 余弦波
+        sinusoidal_hour_embedding[:, :, 0::2] = torch.sin(scaled_hour)
+        sinusoidal_hour_embedding[:, :, 1::2] = torch.cos(scaled_hour)
 
         return hour_embeddings, sinusoidal_hour_embedding
 
     # @torch.no_grad()
     def forward(self, input_ids: torch.Tensor, sinusoidal_duration_embedding) -> torch.Tensor:
-        # 计算并添加三种嵌入
-        # _, sinusoidal_day_embedding = self._compute_day_embeddings(input_ids)
-        # _, sinusoidal_hour_embedding = self._compute_hour_embeddings(input_ids)
-        # sinusoidal_duration_embedding = self._compute_duration_embeddings(input_ids)
-        # sinusoidal_order_embedding = self._compute_order_embeddings(input_ids)
-        import time
         _, sinusoidal_day_embedding = self._compute_day_embeddings(input_ids)
         _, sinusoidal_hour_embedding = self._compute_hour_embeddings(input_ids)
         sinusoidal_duration_embedding = sinusoidal_duration_embedding.to(input_ids.device)
         sinusoidal_order_embedding = self._compute_order_embeddings(input_ids)
 
-        # print(f"day:{t2-t1},hour:{t3-t2}, duration:{t4-t3}, order:{t5-t4}")
-
-        # 应用权重
         sinusoidal_day_embedding *= self.day_weight
         sinusoidal_hour_embedding *= self.hour_weight
         sinusoidal_duration_embedding *= self.duration_weight
         sinusoidal_order_embedding *= self.order_weight
-
-        # print("Position Weight:", self.pos_weight)
-        # print("Segment Weight:", self.seg_weight)
-        # print("In-Segment Weight:", self.in_seg_weight)
-        # print("Introduction Weight:", self.intro_weight)
-
         # return sinusoidal_order_embedding +sinusoidal_day_embedding + sinusoidal_hour_embedding + sinusoidal_duration_embedding
         return sinusoidal_order_embedding +sinusoidal_day_embedding + sinusoidal_hour_embedding + sinusoidal_duration_embedding
 
 
-class MaskedAutoencoder(nn.Module):
-    def __init__(self, vocab_size, d_model, nhead, num_layers, mask_strategy, mask_ratio, mask_step, TTPE_flag):
-        super(MaskedAutoencoder, self).__init__()
+class SmartGuard(nn.Module):
+    def __init__(self, vocab_size, d_model, nhead, num_layers, mask_strategy, mask_ratio, mask_step):
+        super(SmartGuard, self).__init__()
         self.nhead = nhead
         self.embedding = nn.Embedding(vocab_size, d_model)
         self.pos_embedding = PegasusSinusoidalPositionalEmbedding(vocab_size, d_model)
-        # Transformer 编码器和解码器共享参数
-        #  batch_first=True 在进行mask的时候要确保batch在第一个
         self.transformer = nn.Transformer(
             d_model=d_model,
             nhead=nhead,
@@ -214,7 +183,6 @@ class MaskedAutoencoder(nn.Module):
         self.mask_ratio = mask_ratio
         self.mask_step = mask_step
         self.fc = nn.Linear(d_model, vocab_size)
-        self.TTPE_flag = TTPE_flag
 
     def forward(self, x, loss_vector, epoch, duration_emb):
         # Ensure x is of shape (sequence_length, batch_size)
@@ -287,19 +255,12 @@ class MaskedAutoencoder(nn.Module):
         else:
             x = input_emb
 
-
-        # output = self.transformer(x, x, src_mask=tgt_mask, tgt_mask=tgt_mask)
-        # output = self.transformer(x, x, tgt_mask=tgt_mask)
         output = self.transformer(x, x, src_mask=tgt_mask, tgt_mask=tgt_mask)
         output = self.fc(output)
 
         return output, tmp_mask
 
     def evaluate(self, x, duration_emb):
-
-        # 输入嵌入
-        # x = self.embedding(x)
-
         device_control = x.reshape(x.size(0), 10, 4).T[3].T
         input_emb = self.embedding(device_control)
 
