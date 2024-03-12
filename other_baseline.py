@@ -18,11 +18,8 @@ class MarkovChain():
         self.state_number = state_number
 
     def fit(self, sequences):
-        # 从数据中提取所有独特的状态
         # self.states = set(x for sequence in sequences for x in sequence)
         self.states = set(x for x in range(self.state_number))
-
-        # 初始化转移矩阵
         state_index = {state: i for i, state in enumerate(self.states)}
         n_states = len(self.states)
         # transition_matrix = np.zeros((n_states, n_states))
@@ -186,10 +183,6 @@ def train(args):
         y_pred_test[np.where(y_pred_test == 1)] = 0
         y_pred_test[np.where(y_pred_test == -1)] = 1
 
-        # print(y_pred_test)
-        # 输出结果
-        # print("测试集异常值预测:", y_pred_test)
-        # count_cm(labels, y_pred_test)
 
     elif args.model == "MC":
         X_train, X_test_r, X_test_e = make_data()
