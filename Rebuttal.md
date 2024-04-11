@@ -1,4 +1,4 @@
-### Table 3
+## Baseline
 ![Method](./figures/compare.png)
 
 
