@@ -1,4 +1,6 @@
-![Method](./figures/loss_compare.png)
+### Table 3
+![Method](./figures/compare.png)
+
 
 
 
