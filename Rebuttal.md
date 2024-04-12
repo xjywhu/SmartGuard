@@ -4,7 +4,7 @@ We make following changes about baseline table:
 
 (1) We add precision results. (**Response to ReviewerTcaZ**)
 
-(2) We add combined multi-class results while considering all kinds of anomalies. (**Response to Reviewerf23B and ReviewervEzK**)
+(2) We add combined multi-class results (denoted as ALL) while considering all kinds of anomalies. (**Response to Reviewerf23B and ReviewervEzK**)
 
 (3) We add the following baselines (**Response to ReviewerDVsw**):
     
