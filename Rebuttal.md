@@ -14,7 +14,7 @@ We make following changes about baseline table:
 (4) We add non-mL anomaly detection methods as baselines (**Response to RevieweroMtJ**):
     
 - desity-based models: DBSCAN
-- normaizing flow: 
+- normaizing flow: Glow: Kingma, Durk P., and Prafulla Dhariwal. "Glow: Generative flow with invertible 1x1 convolutions." Advances in neural information processing systems 31 (2018).
 
 (5) We add some supervised learning models (**Response to ReviewerZGNc**):
     
