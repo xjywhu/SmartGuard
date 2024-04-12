@@ -1,5 +1,30 @@
 ## Baseline
 ![Method](./figures/compare.png)
+We make following changes about baseline table:
+
+(1) We add precision results. (**Response to ReviewerTcaZ**)
+
+(2) We add combined multi-class results while considering all kinds of anomalies. (**Response to Reviewerf23B and ReviewervEzK**)
+
+(3) We add the following baselines (**Response to ReviewerDVsw**):
+    
+- SSMCTB [R1] Madan N, Ristea N C, Ionescu R T, et al. Self-supervised masked convolutional transformer block for anomaly detection[J]. IEEE Transactions on Pattern Analysis and Machine Intelligence,
+- Anomaly Transformer [R2] Xu J, Wu H, Wang J, et al. Anomaly Transformer: Time Series Anomaly Detection with Association Discrepancy[C]//International Conference on Learning Representations. 2021
+
+(4) We add non-mL anomaly detection methods as baselines (**Response to RevieweroMtJ**):
+    
+- desity-based models: DBSCAN
+- normaizing flow: 
+
+(5) We add some supervised learning models (**Response to ReviewerZGNc**):
+    
+- Homeguardian [R3] Dai, Xuan, et al. "Homeguardian: Detecting anomaly events in smart home systems." Wireless Communications and Mobile Computing 2022 (2022).
+- Tang et al [R4] Tang, Sihai, et al. "Smart home IoT anomaly detection based on ensemble model learning from heterogeneous data." 2019 IEEE International Conference on Big Data (Big Data). IEEE, 2019.
+
+(6) Latest baselines are added: HomeGuardian (R3, 2023), SSMCTB (R1, 2023) Anomaly-Transformer(R2, 2021), Tang (R4, 2019) (**Response to ReviewervEzK**)
+
+
+**Conclusion: as shown in the above table, our model SmartGuard outperforms all other baselines in most cases.**
 
 ## Dataset
 ### Anomaly dataset construction method
@@ -15,8 +40,6 @@ For DM type anomalies, taking ``Open the watervalve at midnight'' as an example,
 For DD type anomalies, taking ``Shower for long time'' as an example, we first sample some sequences containg shower behaviors, then we will change the time of the "turning off the shower" behavior to simulate that the user shower for long time.
 
 **The anomaly sequences are highly aligning with real scenarios**. On the one hand, our modification is based on the user’s normal behavior sequence, which truly reflects the user’s daily behavior and habits. We also added noise behaviors to simulate real scenarios. On the other hand, to avoid abnormal behavior being discovered, attackers always insert attack behaviors between normal behaviors, and users' abnormal behaviors usually occur in daily normal behaviors, which is consistent with the way our data set is constructed.
-
-Our training sets are composed of normal behavior sequences, and abnormal behaviors only appear in the test set, so they will not cause label leakage.
 
 The details of the abnormal samples are as follows:
 
