@@ -52,6 +52,10 @@ def get_args_parser():
     parser.add_argument('--layer', default=2, type=int)
     parser.add_argument('--batch', default=1024, type=int)
     parser.add_argument('--embedding', default=256, type=int)
+    parser.add_argument('--LDMS', default=True, type=bool, help='Loss-guided Dynamic Mask Strategy')
+    parser.add_argument('--attack', default='SD', type=str, metavar='type',
+                        help='Name of attack type to test: SD/MD/DM/DD')
+    parser.add_argument('--test', action='store_true', help='Run in test mode instead of training')
 
     return parser
 
@@ -341,7 +345,7 @@ def make_evaluate_data(attack_type):
     file_list = attacks_dic[args.dataset][attack_type]
     X_test_e = []
     for attack_file in file_list:
-        with open(f"data2/{args.dataset}_data/attack/labeled_{args.dataset}_{attack_file}.pkl", 'rb') as file1:
+        with open(f"data/{args.dataset}_data/attack/labeled_{args.dataset}_{attack_file}.pkl", 'rb') as file1:
             X_test_e += pickle.load(file1)
     for i in range(len(X_test_e)):
         X_test_e[i] = X_test_e[i][0]
@@ -477,4 +481,19 @@ if __name__ == "__main__":
                        mask_strategy=args.mask_strategy, mask_ratio=args.mask_ratio,
                        mask_step=args.mask_step)
 
-    train(args)
+    if args.test:
+        # Load the trained model
+        model.load_state_dict(torch.load(model_name))
+        model = model.to(device)
+        model.eval()
+        
+        # Calculate threshold using validation data
+        threshold = find_threshold(percentage=95)
+        
+        # Run evaluation for the specified attack type
+        weights = {}
+        result = evaluate(threshold, weights, args.attack)
+        print("Evaluation results:")
+        print(result)
+    else:
+        train(args)

@@ -1,0 +1,534 @@
+Make Your Home Safe: Time-aware Unsupervised User Behavior
+Anomaly Detection in Smart Homes via Loss-guided Mask
+JingyuXiao∗ ZhiyaoXu∗ QingsongZou∗
+PengChengLaboratory Xi’anUniversityofElectronicScience TsinghuaShenzhenInternational
+TsinghuaShenzhenInternational andTechnology GraduateSchool
+GraduateSchool Xi’an,China PengChengLaboratory
+Shenzhen,China 21009200843@stu.xidian.edu.cn Shenzhen,China
+jy-xiao21@mails.tsinghua.edu.cn zouqs21@mails.tsinghua.edu.cn
+QingLi† DanZhao DongFang
+PengChengLaboratory PengChengLaboratory Tencent
+Shenzhen,China Shenzhen,China Shenzhen,China
+liq@pcl.ac.cn zhaod01@pcl.ac.cn victordfang@tencent.com
+RuoyuLi WenxinTang KangLi
+TsinghuaShenzhenInternational TsinghuaShenzhenInternational TsinghuaShenzhenInternational
+GraduateSchool GraduateSchool GraduateSchool
+Shenzhen,China Shenzhen,China Shenzhen,China
+liry19@mails.tsinghua.edu.cn vinsontang2126@gmail.com lk26603878@gmail.com
+XudongZuo PenghuiHu YongJiang
+TsinghuaShenzhenInternational TsinghuaUniversity TsinghuaShenzhenInternational
+GraduateSchool Beijing,China GraduateSchool
+Shenzhen,China huph22@mails.tsinghua.edu.cn PengChengLaboratory
+zuoxd20@mails.tsinghua.edu.cn Shenzhen,China
+jiangy@sz.tsinghua.edu.cn
+ZixuanWeng MichaelR.Lyu
+BeijingJiaotongUniversity TheChineseUniversityofHongKong
+Beijing,China HongKong,China
+20722027@bjtu.edu.cn lyu@cse.cuhk.edu.hk
+ABSTRACT aLoss-guidedDynamicMaskStrategy(LDMS)toencouragethe
+Smarthomes,poweredbytheInternetofThings,offergreatconve- modeltolearnlessfrequentbehaviors,whichareoftenoverlooked
+niencebutalsoposesecurityconcernsduetoabnormalbehaviors, duringlearning.Second,weproposeaThree-levelTime-awarePo-
+suchasimproperoperationsofusersandpotentialattacksfrom sitionEmbedding(TTPE)toincorporatetemporalinformationinto
+maliciousattackers.Severalbehaviormodelingmethodshavebeen positionalembeddingtodetecttemporalcontextanomaly.Third,
+proposedtoidentifyabnormalbehaviorsandmitigatepotential weproposeaNoise-awareWeightedReconstructionLoss(NWRL)
+risks.However,theirperformanceoftenfallsshortbecausethey thatassignsdifferentweightsforroutinebehaviorsandnoisebehav-
+donoteffectivelylearnlessfrequentbehaviors,considertemporal iorstomitigatetheinterferenceofnoisebehaviorsduringinference.
+context,oraccountfortheimpactofnoiseinhumanbehaviors.In ComprehensiveexperimentsdemonstratethatSmartGuardconsis-
+thispaper,weproposeSmartGuard,anautoencoder-basedunsuper- tentlyoutperformsstate-of-the-artbaselinesandalsooffershighly
+viseduserbehavioranomalydetectionframework.First,wedesign interpretableresults.
+∗Thefirstthreeauthorshaveequalcontribution.
+CCSCONCEPTS
+†QingLiisthecorrespondingauthor.
+•Securityandprivacy→Humanandsocietalaspectsofse-
+ThisworkislicensedunderaCreativeCommonsAttribution curityandprivacy.
+International4.0License.
+KEYWORDS
+KDD’24,August25–29,2024,Barcelona,Spain
+©2024Copyrightheldbytheowner/author(s).PublicationrightslicensedtoACM.
+UserBehaviorModeling,AnomalyDetection,Transformer,Smart
+ACMISBN979-8-4007-0490-1/24/08
+https://doi.org/10.1145/3637528.3671708 Homes
+4202
+nuJ
+81
+]RC.sc[
+2v82901.6042:viXra
+KDD’24,August25–29,2024,Barcelona,Spain JingyuXiao,ZhiyaoXuandQingsongZouetal.
+ACMReferenceFormat:
+JingyuXiao,ZhiyaoXu,QingsongZou,QingLi,DanZhao,DongFang,
+RuoyuLi,WenxinTang,KangLi,XudongZuo,PenghuiHu,YongJiang,
+ZixuanWeng,andMichaelR.Lyu.2024.MakeYourHomeSafe:Time-aware
+UnsupervisedUserBehaviorAnomalyDetectioninSmartHomesviaLoss-
+guidedMask.InProceedingsofthe30thACMSIGKDDConferenceonKnowl-
+edgeDiscoveryandDataMining(KDD’24),August25–29,2024,Barcelona,
+Spain.ACM,NewYork,NY,USA,12pages.https://doi.org/10.1145/3637528.
+3671708
+1 INTRODUCTION
+TherapidgrowthofIoTsolutionshasledtoanunprecedented
+increaseinsmartdeviceswithinhomes,expectedtoreachapprox-
+imately5billionby2025[24].However,theabnormalbehaviors
+posesubstantialsecurityriskswithinsmarthomes.Theseabnor-
+malbehaviorsusuallyoriginatefromtwoprimarysources.First,
+improperoperationsbyuserscancauseabnormalbehaviors,such
+asinadvertentlyactivatingtheairconditioner’scoolingmodedur-
+ingwinterorforgettingtocloseawatervalve.Second,malicious
+attackerscanexploitvulnerabilitieswithinIoTdevicesandplat-
+forms,takingunauthorizedcontrolofthesedevices.Forexample,
+hackerscancompromiseIoTplatforms,allowingthemtodisable
+securitycamerasandmanipulatehomeautomationsystems,creat-
+ingopportunitiesforburglary.Thesesecurityconcernsemphasize
+theurgencyofrobustbehavioralmodelingmethodsandenhanced
+securitymeasurestosafeguardsmarthomeenvironments.
+Deeplearninghasbeenemployedacrossvariousdomainsto
+mine correlations between behaviors for modeling user behav-
+iorsequences[22,31,32]andaddresssecurityissues[2,13–15].
+DeepMove[9]leveragesRNNstomodelbothlongandshort-term
+mobilitypatternsofusersforhumanmobilityprediction.Tocap-
+ture the dynamics of user’s behaviors, SASRec [20] proposes a
+self-attentionbasedmodeltoachievesequentialrecommendation.
+Morerecentefforts[4,8,30]primarilyfocusontransformer-based
+modelsfortheirsuperiorabilitytohandlesequentialbehaviordata.
+However,wecannotborrowtheabovemodelstodirectlyapply
+theminourscenarios,becauseofthefollowingthreechallengesof
+userbehaviormodelinginsmarthomes.
+600
+400
+200
+0
+0 10 20 30 40 50 60 70
+Behavior ID
+roivaheB
+fo
+rebmuN
+0.020
+0.015
+0.010
+0.005
+0.000
+ssoL
+noitcurtsnoceR
+(e.g.,usingmicrowaveandoven)ofofficeworkersmaybeinfre-
+quent,becausetheydineattheirworkplaceonweekdaysandonly
+cookonweekends.Ontheotherhand,somedailybehaviorslike
+turningonlightsandwatchingTVofthesameuserscanbemore
+frequent.Behaviorimbalancecomplicatesthelearningprocessfor
+models:somebehaviors,whichoccurfrequentlyinsimilarcontexts,
+canbeeasilyinferred,whileothersthatrarelyappearormanifest
+indiversecontextscanbemorechallengingtoinfer.Wetrainan
+autoencodermodelonANdataset(showninTable1),recordtheoc-
+currencesandreconstructionlossofdifferentbehaviors.Asshown
+inFigure1,withthenumberofoccurrencesofbehaviordecreases,
+thereconstructionlosstendstoincrease.
+Second,temporalcontext,e.g.,thetiminganddurationofuser
+behaviors,playsasignificantroleinabnormalbehaviordetection
+butisoverlookedbyexistingsolutions.Forexample,turningon
+thecoolingmodeoftheairconditionerinwinterisabnormal,but
+isnormalinsummer.Showeringfor30-40minutesisnormal,but
+exceeding2hoursuggestsauseraccident.Ignoringtiminginforma-
+tionhinderstheidentificationofabnormalbehaviorpatterns.As
+showninFigure2,sequence1representsauser’snormallaundry-
+related behaviors. Sequences 2 and 3 follow the same order as
+sequence1.However,insequence2,thewatervalvewereopensat
+2o’clockinthenight.Insequence3,thedurationbetweenopening
+2 Problem Definition
+andclosingthewatervalveisexcessivelylong.Thereforethese
+twosequencesshouldbeidentifiedasabnormalbehaviorspossibly
+conductedbyattackersintendingtoinducewaterleakage.
+open open notification close
+9am 9:10am 9:50am 10am
+open open notification close
+2am 2:10am 2:50am 3am
+open open notification close
+9am 9:10am 9:50am …… 12am
+Figure 2: Example of three user behaviors with the same
+behaviororder.Sequence2and3areabnormalduetotheir
+inappropriatetimingandexcessiveduration.
+Third,arbitraryintentsandpassivedeviceactionscancause
+noisebehaviorsinuserbehaviorsequences,whichinterferemodel’s
+inference.Figure3showsnoisebehaviorsinabehaviorsequence
+relatedtoauser’sbehaviorsaftergettingup.Theuserdosome
+Figure1:Reconstructionlossesforbehaviorswithdifferent
+routinebehaviorslike“turnonthebedlight”,“openthecurtains”,
+occurrencefrequencies.
+“switchofftheairconditioner”,“opentherefrigerator”,“closethe
+refrigerator”and“switchontheoven”.However,therearealso
+First,theoccurrencefrequenciesofdifferentuserbehaviorsmay somesporadicactionswhicharenottightlyrelatedtothebehavior
+beimbalanced,leadingtochallengesinlearningthesemanticsof sequence,including1)activebehaviors,e.g.,suddenlydecidingto
+thesebehaviors.Thisuserbehaviorimbalancecanbeattributed “turnonthenetworkaudio”tolistentomusic;2)passivebehavior
+toindividuals’livinghabits.Forexample,cook-relatedbehaviors fromdevices,e.g.,the“self-refresh”oftheairpurifier.Thesenoise
+MakeYourHomeSafe:Time-awareUnsupervisedUserBehaviorAnomalyDetectioninSmartHomesviaLoss-guidedMask KDD’24,August25–29,2024,Barcelona,Spain
+behaviorsmayalsooccurinothersequenceswithvaryingpatterns. andmulti-levelperiodicities.However,abovemethodsaimatpre-
+Thesenoisebehaviorsintroducesuncertaintythatcandisruptthe dictingnextbehaviorofuseraccurately,theycannotbeapplied
+learningprocessandleadthemodeltomisclassifysequencescon- intoabnormalbehaviordetection.
+taining noise behaviors as anomalies. Therefore, treating noise
+behaviorsonparwithnormalbehaviorscouldpotentiallyharmthe 2.2 AttacksandDefensesinSmartHomes
+model’sperformance,leadingtoincreasedlosses. Anincreasingnumberofattackvectorshavebeenidentifiedin
+smarthomesinrecentyears.Inadditiontocyberattacks,itisalsoa
+on open off open close open switch onself-refresh concerningfactorthatIoTdevicesareoftencloseassociationwith
+theuser’sphysicalenvironmentandtheyhavetheabilitytoalter
+𝑡( 𝑡’ 𝑡" 𝑡! 𝑡# 𝑡$ 𝑡% 𝑡& physicalenvironment.Inthiscontext,theautomationintroduces
+moreserioussecurityrisks.Priorresearchhasrevealedthatad-
+routine behaviors noise behaviors
+versariescanleakpersonalinformation,andgainphysicalaccess
+tothehome[3,19].In[10],spoofattackisemployedtoexploit
+l b ig e h d t curtain cond a it ir io ner refrigerator oven ne au tw d o io rk pu a ri i f r i er automationrulesandtriggerunexpecteddeviceactions.[7,11]
+applydelay-basedattackstodisruptcross-platformIoTinforma-
+tionexchanges,resultinginunexpectedinteractions,renderingIoT
+Figure3:Anexampleofnoisebehaviors.
+devicesandsmarthomesinaninsecurestate.Thisseriesofattacks
+aim at causing smart home devices to exhibit expected actions,
+Inthispaper,weproposeSmartGuardtosolveabovechallenges.
+therebyposingsignificantsecuritythreats.Therefore,designingan
+SmartGuardisanautoencoder-basedarchitecture,whichlearnsto
+effectivemechanismtodetectsuchattacksisnecessary.6thSense
+reconstructnormalbehaviorsequencesduringtrainingandidentify
+[27]utilizesNaiveBayestodetectmaliciousbehaviorassociated
+thebehaviorsequenceswithhighreconstructionlossasanomaly.
+withsensorsinsmarthomes.Aegis[28]utilizesaMarkovChainto
+Firstly,wedeviseaLoss-guidedDynamicMaskStrategy(LDMS)
+detectmaliciousbehaviors.ARGUS[26]designedanAutoencoder
+topromotethemodel’slearningofinfrequenthard-to-learnbehav-
+basedonGatedRecurrentUnits(GRU)todetectinfiltrationattacks.
+iors.Secondly,weintroduceaThree-levelTime-awarePosition
+However,thesemethodsignorethebehaviorimbalance,temporal
+Embedding(TTPE)tointegratetemporalinformationintoposi-
+informationandnoisebehaviors.
+tionalembeddingfordetectingtemporalcontextanomalies.Lastly,
+weproposeaNoise-awareWeightedReconstructionLoss(NWRL)
+3 PROBLEMFORMULATION
+toassigndistinctweightstoroutinebehaviorsandnoisebehaviors,
+LetDdenoteasetofdevices,Cdenoteasetofdevicecontrolsand
+therebymitigatingtheimpactofnoisebehaviors.Ourcodesare
+releasedtotheGitHub1.Ourcontributionscanbesummarizedas Sdenoteasetofbehaviorsequences.
+follows: Definition1. (Behavior)Abehavior𝑏 = (𝑡,𝑑,𝑐),isa3-tuple
+• WedesignLDMStomaskthebehaviorswithhighrecon- consistingoftimestamp𝑡,device𝑑 ∈Danddevicecontrol𝑐 ∈C.
+structionloss,thusencouragingthemodeltolearnthese
+Forexample,behaviorb=(2022-08-0418:30,airconditioner,air
+hard-to-learnbehaviors.
+conditioner:switchon)describesthebehavior“swichontheaircon-
+• WeproposeTTPEtoconsidertheorder-level,moment-level
+ditioner”at18:30on2022-08-04.
+andduration-levelinformationofuserbehaviorsmeanwhile.
+• WedesignNWRLtotreatnoisybehaviorsandnormalbehav- Definition2. (BehaviorSequence)Abehaviorsequence𝑠 =
+iorsdifferentlyforlearningrobustbehaviorrepresentations. [𝑏
+1
+,𝑏
+2
+,···,𝑏 𝑛] ∈Sisalistofbehaviors,orderedbytheirtimestamps,
+and𝑛isthelengthof𝑠.
+2 RELATEDWORK
+WedefinetheUserBehaviorSequence(UBS)anomalydetection
+2.1 UserBehaviorModelinginSmartHomes
+problemasfollows.
+Someworksproposetomodeluserbehavior(i.e.,userdevicein-
+Problem 1. (UBS Anomaly Detection) Given a behavior se-
+teraction)basedondeeplearning.[16]useseventtransitiongraph
+quence𝑠,determinewhether𝑠isananomalyeventoranormalevent.
+tomodelIoTcontextanddetectanomalies.In[34],authorsbuild
+deviceinteractiongraphtolearnthedevicestatetransitionrela- Inthispaper,weconsiderfourtypesofabnormalbehaviors:
+tionshipcausedbyuseractions.[12]detectsanomaliesthroughcor-
+• (SD)SingleDevicecontextanomaly(Figure4(a)),definedas
+relationalanalysisofdeviceactionsandphysicalenvironment.[29]
+unusualhighfrequencyoperationsonasingledevice,e.g.,
+infersuserbehaviorthroughreadingsfromvarioussensorsinstalled
+frequentlyswitchinglightonandofftobreakthelight.
+intheuser’shome.IoTBeholder[38]utilizesattention-basedLSTM
+• (MD)MultipleDevicescontextanomaly(Figure4(b)),de-
+topredicttheuserbehaviorfromhistorysequences.SmartSense
+finedasthesimultaneousoccurrenceofbehaviorsonmul-
+[18]leveragesquery-basedtransformertomodelcontextualinfor-
+tiple devices that are not supposed to occur in the same
+mationofuserbehaviorsequences.DeepUDI[35]andSmartUDI
+sequence,e.g.,turningoffthecameraandopeningthewin-
+[36]userelationalgatedgraphneuralnetworks,capsuleneural
+dowforburglary.
+networksandcontrastivelearningtomodelusers’routines,intents
+• (DM)Devicecontrol-Momentcontextanomaly(Figure4(c)),
+1https://github.com/xjywhu/SmartGuard definedasadevicecontroloccurringataninappropriate
+Challenge
+1
+KDD’24,August25–29,2024,Barcelona,Spain JingyuXiao,ZhiyaoXuandQingsongZouetal.
+2)randommask:maskingbehaviorsateveryepochrandomlyto
+reconstruct the masked behaviors; 3) top-𝑘 loss mask: masking
+top𝑘b(ea)h Aatvteinotriosn wWietighhhtigherreconstructionlosstoreconstructthe
+on off broken close open theft masked behaviors. We set mask ratio as 20% for the latter two.
+(a) Single Device Context Anomaly. (b) Multiple Devices Context Anomaly. Figure6showsthechangingtrendsofthereconstructionlossand
+it’svarianceofdifferentbehaviorduringtrainingonSPdataset
+(describedinTable1).First,asshowninFigure6(a),themodel
+withoutmaskshowsthefastestconvergencetrend,whereasthe
+cooling winter cold open three hours flood lossofthemodelwithmaskfluctuates.Modelwithoutmaskcan
+(c) Device Control-Moment Context Anomaly. (d) Device Control-Duration Context Anomaly. simultaneouslylearnallbehaviors,facilitatingrapidconvergence.
+Incontrast,themaskstrategyonlyencouragesthemodeltofocus
+Figure4:Differenttypesofanomalybehaviors. onlearningmaskedbehaviors,whichmayhinderinitial-stagecon-
+vergence.Second,themodelwithtop-𝑘lossmaskstrategyshows
+lowestvariancetowardstheendoftrainingasshowninFigure6(b),
+time,e.g.,turningonthecoolingmodeofanairconditioner becausethetop-𝑘 lossmaskstrategyeffectivelyencouragesthe
+inwinter,potentiallycausingtheusertocatchacold. modeltolearnhard-to-learnbehaviors(i.e.,thebehaviorswithhigh
+• (DD)Devicecontrol-Durationcontextanomaly(Figure4(d)), reconstruction loss), thereby reducing the variance of behavior
+definedasdevicecontrolsthatlastforaninappropriatedu- reconstructionlosses.
+ration,e.g.,leavingawatervalveopenfor3hoursforflood Inthispaper,wedesignaLoss-guidedDynamicMaskStrategy.
+attack. Intuitively,atthebeginningoftraining,weencouragethemodel
+tolearntherelativelyeasytasktoaccelerateconvergence,i.e.,
+4 METHODOLOGY behaviorsequencereconstructionwithoutmask.Aftertraining𝑁
+epochswithoutmask,weadoptthetop-𝑘 lossmaskstrategyto
+4.1 SolutionOverview
+encouragethemodeltolearnthemaskedbehaviorswith
+Toachieveaccurateuserbehaviorsequenceanomalydetectionin
+high reconstruction loss. We continuously track the model’s
+smarthomes,weproposeSmartGuard,depictedinFigure5.The
+reconstructionlossofdifferentbehaviorsbyupdatingalossvector
+workflowofSmartGuardcanbesummarizedasfollows.During
+ineachepochtoguidethemaskstrategyinthenextepoch.In
+training,theLoss-guidedDynamicMaskStrategy(§4.2)isinitially epoch𝑒𝑝,thelossvectorL 𝑒𝑝 iscalculatedas:
+vec
+employedtomaskhard-to-learnbehaviorsbasedonthelossvec-
+torL vecfromthepreviousepoch.Subsequently,theThree-level L v 𝑒 e 𝑝 c = (cid:8)ℓ 1 ,ℓ 2 ,...,ℓ 𝑐 ,...,ℓ |C| (cid:9),𝑐 ∈C, (1)
+T
+le
+i
+v
+m
+e
+e
+l,
+-a
+m
+w
+o
+a
+m
+re
+en
+P
+t
+o
+-
+s
+l
+i
+e
+t
+v
+io
+e
+n
+l,
+a
+a
+l
+n
+E
+d
+nc
+d
+o
+u
+d
+r
+e
+a
+r
+ti
+(
+o
+§
+n
+4
+-
+.3
+le
+.1
+v
+)
+e
+i
+l
+s
+t
+a
+e
+p
+m
+p
+p
+li
+o
+e
+r
+d
+a
+t
+l
+o
+in
+c
+f
+a
+o
+p
+r
+t
+m
+ur
+a
+e
+ti
+o
+o
+r
+n
+de
+o
+r
+f
+-
+ℓ 𝑐 = 𝑛 1 ∑︁
+𝑛𝑐
+ℓ 𝑐 𝑖, (2)
+thebehaviors,producingthepositionalembedding𝑃𝐸.Thisembed- 𝑐 𝑖=1
+dingisthenaddedtothedevicecontrolembeddingℎ 𝑐 toformthe where𝑛 𝑐isthenumberoftimesthedevicecontrol𝑐occursinepoch
+behaviorembeddingh.Finally,hisfedintoan𝐿-layerattention- 𝑒𝑝,andℓ 𝑐 istheaveragereconstructionlossofthedevicecontrol
+basedencoderanddecodertoextractcontextualinformationfor
+𝑐.Inepoch𝑒𝑝+1,themaskvectorforbehaviorsequencesample
+reconstructingthesourcesequence.Duringtheinferencephase,the 𝑠 = [𝑏 1 ,𝑏 2 ,···,𝑏 𝑛]isobtainedas:
+N Re o c is o e n - s a t w ru a c r t e io W n e L ig o h ss te ( d §4 R .4 e ) co is n u st t r i u li c z t e i d on to L a o s s s s ig N n o d is i e ff - e a r w en ar t e w W ei e g i h gh ts te to d 𝑚𝑎𝑠𝑘(𝑖)= (cid:110) 1 0 , , i i f f 𝑖 𝑖 ∉ ∈ 𝑠 𝑠 𝑜 𝑜 𝑟 𝑟 𝑡 𝑡 𝑒 𝑒 𝑑 𝑑 _ _ 𝑖 𝑖 𝑛 𝑛 𝑑 𝑑 𝑒 𝑒 𝑥 𝑥 [ [ : : ⌊ ⌊ 𝑛 𝑛 · · 𝑟 𝑟 ⌋ ⌋ ] ] ,𝑖 ∈ [1,𝑛], (3)
+variousbehaviors,determinedbythelossvectorfromthetraining (cid:16)(cid:110) 𝑒𝑝 𝑒𝑝 𝑒𝑝 (cid:111)(cid:17)
+dataset,resultinginthefinalreconstructionloss𝑠𝑐𝑜𝑟𝑒.Ifthe𝑠𝑐𝑜𝑟𝑒 𝑠𝑜𝑟𝑡𝑒𝑑_𝑖𝑛𝑑𝑒𝑥 =argsort L vec (𝑏 1 ),L vec (𝑏 2 ),....L vec (𝑏 𝑛) , (4)
+surpassesthethreshold𝑡ℎ,SmartGuardtriggersanalarm. whereargsortgetsthesortedindexwithdescendingorderofthe
+elementsinthevector,𝑟 ∈ [0,1] isthemaskratio,and𝑛 isthe
+4.2 Loss-guidedDynamicMaskStrategy lengthofbehaviorsequence𝑠.
+Autoencoders[37],whichtakecompletedatainstancesasinput
+4.3 AutoencoderwithTemporalInformation
+andtargettoreconstructtheentireinputdata,arewidelyusedin
+anomalydetection.Differentfromtraditionalautoencoders,masked 4.3.1 Three-levelTime-awarePositionalEncoder. Thetem-
+autoencodersrandomlymaskaportionofinputdata,encodingthe poralinformationinuserbehaviorsequencedataprimarilyresides
+partially-maskeddataandaimingtoreconstructthemaskedtokens. inthetimingofcontrolbehaviors,whichcanbeexaminedfrom
+Byintroducingamoremeaningfulself-supervisedtask,maskedau- twoperspectives:theabsolutetimingofeachindividualcontrol
+toencodershaverecentlyexcelledinimages[17]learning.However, behavior,andtherelativetiminggapbetweencontrolactionson
+suchreconstructiontaskswithoutmaskandwithrandommaskare thesamedevice.Ontheonehand,therelativetiminggapbetween
+sub-optimalinourscenariosbecausetheydonotemphasizethe controlactionsonthesamedevicereflectsthedurationthedevice
+learningofhard-to-learnbehaviorsthatoccurrarely. isinsomespecificstateandtheoperationfrequencyoftheuser.
+Weconductexperimentstoverifytheperformanceofautoen- Ontheonehand,userbehaviorsareusuallytime-regulated,and
+coders trained with three mask options: 1) w/o mask: no mask thefunctionalitiesadevicecarriedcandeterminetheabsolutetim-
+strategyisused,theobjectivefunctionistoreconstructtheinput; ingusersoperateonit.Forexample,usersusuallyoperatelights
+MakeYourHomeSafe:Time-awareUnsupervisedUserBehaviorAnomalyDetectioninSmartHomesviaLoss-guidedMask KDD’24,August25–29,2024,Barcelona,Spain
+0 1 2 3 4 5 6 7 order
+Behavior Weight 𝑾𝒓𝒆𝒄 Noise-aware
+…… Weighted
+𝑡 ( 𝑡 ’ 𝑡 " duration 𝑡 ! 𝑡 # dur 𝑡 a $ tion 𝑡 % 𝑡 & moment Reconstruction
+Noise Behaviors Loss
+Loss-guided Dynamic Masked Strategy Loss Loss Vector ℒ𝒗𝒆𝒄 Yes No
+<𝒕𝒉?
+hard-to-learn
+easy-to-learn
+Mask Mask Mask
+Behavior Encoder & Decoder
+Update
+Three-level Time-aware Positional Device Control Architecture
+Encoder Encoder Reconstruction Loss ℒ𝒓𝒆𝒄
+Order Hour Day Duration DeviceControl …… Multi-head
+Embedding Embedding Embedding Embedding Embedding
+𝑷𝑬(𝑶𝒓𝒅𝒆𝒓) 𝑷𝑬(𝑯𝒐𝒖𝒓) 𝑷𝑬(𝑫𝒂𝒚) 𝑷𝑬(𝑫𝒖𝒓𝒂𝒕𝒊𝒐𝒏) 𝒉𝒄 Attention
+𝐿× Add & Norm
+Prediction Layer
+Feed Forward
+Behavior
+Embedding h
+Add & Norm
+Sequence Encoder Sequence Decoder
+Figure5:Theoverviewof SmartGuard.
+1.2 1.0 0.8 0.6
+0.4
+0.2 0.0
+123456789101112131415 Training Step
+ssoL noitcurtsnoceR
+fo naeM
+w/o Mask 10 Random Mask Top-k Loss Mask 8 6
+4
+2 0
+123456789101112131415 Training Step
+(a)Meanofreconstructionloss.
+ssoL
+noitcurtsnoceR
+fo
+ecnairaV
+Then,thepositionalembeddingiscalculatedas:
+1.50 1.25 1.00 0 0 . . 5 7 0 5 𝑃𝐸=𝑤 𝑜𝑟𝑑𝑒𝑟 ·𝑃𝐸(𝑝𝑜𝑠)+𝑤 ℎ𝑜𝑢𝑟 ·𝑃𝐸(ℎ𝑜𝑢𝑟)+ 0 0 . . 0 2 0 5 9 101112131415 𝑤 𝑑𝑎𝑦·𝑃𝐸(𝑑𝑎𝑦)+𝑤
+𝑑𝑢𝑟
+·𝑃𝐸(𝑑𝑢𝑟𝑎𝑡𝑖𝑜𝑛), (6)
+w/o Mask R To a p n - d k o L m os M s a M s a k sk where𝑤 𝑜𝑟𝑑𝑒𝑟,𝑤 ℎ𝑜𝑢𝑟,𝑤 𝑑𝑎𝑦 and𝑤 𝑑𝑢𝑟 arelearnableweights.𝑃𝐸(·)
+isapositionalencodingfunction[33]definedas:
+(b)Varianceofreconstructionloss.
+𝑃𝐸 (·,2𝑖) =sin
+(cid:16) ·/100002𝑖/𝑑(cid:17)
+,
+(7)
+F
+d
+i
+i
+g
+ff
+u
+e
+r
+r
+e
+en
+6
+t
+:A
+m
+u
+a
+t
+s
+o
+k
+en
+st
+c
+r
+o
+a
+d
+te
+e
+g
+r
+i
+t
+e
+r
+s
+a
+.
+iningprocessonSPdatasetunder
+𝑃𝐸 (·,2𝑖+1) =cos
+(cid:16) ·/100002𝑖/𝑑(cid:17)
+,
+where𝑖denotesthe𝑖-thdimensionofthepositionalembedding,𝑑
+isthedimensionoftemporalembedding.
+inthemorningandevening,andoperatethemicrowaveandthe
+ovenatmealtime.Sincecertainoperationsfrequentlytakeplace Tolearntherepresentationℎ 𝑐 fordevicecontrol𝑐 ∈C,wefirst
+encodedevicecontrol𝑐intoalow-dimensionallatentspacethrough
+nearlysimultaneously,wewillalsoconsidertheorderofbehaviors
+devicecontrolencoder,i.e.,anembeddinglayer.Finally,weadd
+toprovideamorecomprehensivecharacterizationofbehaviors
+positionalembeddingtothedevicecontrolembeddingasfollowing
+thatoccursuccessively.Therefore,weincorporatethreetypesof
+togetthebehaviorembedding:
+temporalinformationintoourmodel.(1)Order-leveltemporal
+information:weuseinteger𝑜𝑟𝑑𝑒𝑟 ∈ [0,𝑛−1] todenotesthe
+order-levelinformationofthebehavior,𝑛isthelengthofbehaviors h=𝑃𝐸+ℎ 𝑐 . (8)
+sequence𝑠.(2)Moment-leveltemporalinformation:werepre-
+sentthemomentashourofdayℎ𝑜𝑢𝑟anddayofweek𝑑𝑎𝑦basedon 4.3.2 SequenceEncoder. Tolearnthesequenceembedding,we
+employtransformerencoder[33]consistingofmulti-headattention
+behavior’stimestamp.(3)Duration-leveltemporalinformation:
+thedurationforbehavior𝑏iscalculatedas: layer,residualconnectionsandposition-wisefeed-forwardnetwork
+(FNN).Givenaninputbehaviorrepresentationh,theself-attention
+layercaneffectivelymineglobalsemanticinformationofbehavior
+𝑑𝑢𝑟𝑎𝑡𝑖𝑜𝑛 𝑏 =𝑡(𝑏)−𝑡(𝑏 𝑛𝑒𝑥𝑡) (5) sequencecontextbylearningqueryQ,key Kandvalue Vmatrices
+where𝑏and𝑏 𝑛𝑒𝑥𝑡 arethebehaviorsonthesamedeviceand𝑏 𝑛𝑒𝑥𝑡 ofdifferentvariables,whicharecalculatedas:
+isthefirstbehaviorafter𝑏 thatoperatesonthedevice,and𝑡(𝑏)
+representstheoccurrencetimeofbehavior𝑏. Q=hW 𝑄, K=hW 𝐾, V=hW 𝑉, (9)
