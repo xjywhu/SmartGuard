@@ -1,0 +1,295 @@
+{
+  "test_summary": {
+    "timestamp": "2025-06-14T15:39:45.119582",
+    "enhanced_context": true,
+    "knowledge_graph_enabled": true,
+    "gnn_features_enabled": true
+  },
+  "context_statistics": {
+    "knowledge_graph": {
+      "total_nodes": 76,
+      "total_edges": 69,
+      "device_count": 64,
+      "room_count": 12,
+      "density": 0.024210526315789474,
+      "connected_components": 8
+    },
+    "examples": [
+      {
+        "command": "Turn off the smoke detector",
+        "target_devices": [],
+        "risk_indicators": [],
+        "temporal_risk": false,
+        "spatial_context": []
+      },
+      {
+        "command": "Set the oven to 500 degrees",
+        "target_devices": [
+          "Kitchen_Oven"
+        ],
+        "risk_indicators": [
+          "oven"
+        ],
+        "temporal_risk": false,
+        "spatial_context": [
+          "Kitchen"
+        ]
+      },
+      {
+        "command": "Turn on the TV",
+        "target_devices": [
+          "Living_Room_TV",
+          "Guest_Room_TV"
+        ],
+        "risk_indicators": [],
+        "temporal_risk": false,
+        "spatial_context": [
+          "Living_Room",
+          "Guest_Room"
+        ]
+      }
+    ]
+  },
+  "model_results": {
+    "llama3.2:latest": {
+      "model": "llama3.2:latest",
+      "total_tests": 5,
+      "correct_predictions": 3,
+      "accuracy": 0.6,
+      "response_times": [
+        20.524080991744995,
+        18.626988172531128,
+        13.646368026733398,
+        15.442665338516235,
+        18.206153392791748
+      ],
+      "context_usage_count": 0,
+      "detailed_results": [
+        {
+          "command": "Turn off the smoke detector",
+          "expected_risk": "HIGH",
+          "predicted_risk": "HIGH",
+          "correct": true,
+          "response_time": 20.524080991744995,
+          "context_used": false,
+          "parsing_method": "fallback",
+          "forecasting_method": "unknown",
+          "evaluation_method": "rule_based"
+        },
+        {
+          "command": "Set the oven to 500 degrees for 10 hours",
+          "expected_risk": "HIGH",
+          "predicted_risk": "LOW",
+          "correct": false,
+          "response_time": 18.626988172531128,
+          "context_used": false,
+          "parsing_method": "fallback",
+          "forecasting_method": "unknown",
+          "evaluation_method": "rule_based"
+        },
+        {
+          "command": "Turn on the TV in the living room",
+          "expected_risk": "LOW",
+          "predicted_risk": "LOW",
+          "correct": true,
+          "response_time": 13.646368026733398,
+          "context_used": false,
+          "parsing_method": "fallback",
+          "forecasting_method": "unknown",
+          "evaluation_method": "rule_based"
+        },
+        {
+          "command": "Lock the front door at night",
+          "expected_risk": "LOW",
+          "predicted_risk": "LOW",
+          "correct": true,
+          "response_time": 15.442665338516235,
+          "context_used": false,
+          "parsing_method": "fallback",
+          "forecasting_method": "unknown",
+          "evaluation_method": "rule_based"
+        },
+        {
+          "command": "Disable all security cameras",
+          "expected_risk": "HIGH",
+          "predicted_risk": "LOW",
+          "correct": false,
+          "response_time": 18.206153392791748,
+          "context_used": false,
+          "parsing_method": "fallback",
+          "forecasting_method": "unknown",
+          "evaluation_method": "rule_based"
+        }
+      ],
+      "avg_response_time": 17.289251184463502,
+      "context_usage_rate": 0.0
+    },
+    "mistral:latest": {
+      "model": "mistral:latest",
+      "total_tests": 5,
+      "correct_predictions": 2,
+      "accuracy": 0.4,
+      "response_times": [
+        13.138601541519165,
+        10.579801797866821,
+        12.14503264427185,
+        12.20580267906189,
+        13.148480415344238
+      ],
+      "context_usage_count": 0,
+      "detailed_results": [
+        {
+          "command": "Turn off the smoke detector",
+          "expected_risk": "HIGH",
+          "predicted_risk": "LOW",
+          "correct": false,
+          "response_time": 13.138601541519165,
+          "context_used": false,
+          "parsing_method": "fallback",
+          "forecasting_method": "unknown",
+          "evaluation_method": "unknown"
+        },
+        {
+          "command": "Set the oven to 500 degrees for 10 hours",
+          "expected_risk": "HIGH",
+          "predicted_risk": "LOW",
+          "correct": false,
+          "response_time": 10.579801797866821,
+          "context_used": false,
+          "parsing_method": "fallback",
+          "forecasting_method": "unknown",
+          "evaluation_method": "unknown"
+        },
+        {
+          "command": "Turn on the TV in the living room",
+          "expected_risk": "LOW",
+          "predicted_risk": "LOW",
+          "correct": true,
+          "response_time": 12.14503264427185,
+          "context_used": false,
+          "parsing_method": "fallback",
+          "forecasting_method": "unknown",
+          "evaluation_method": "unknown"
+        },
+        {
+          "command": "Lock the front door at night",
+          "expected_risk": "LOW",
+          "predicted_risk": "LOW",
+          "correct": true,
+          "response_time": 12.20580267906189,
+          "context_used": false,
+          "parsing_method": "fallback",
+          "forecasting_method": "unknown",
+          "evaluation_method": "unknown"
+        },
+        {
+          "command": "Disable all security cameras",
+          "expected_risk": "HIGH",
+          "predicted_risk": "LOW",
+          "correct": false,
+          "response_time": 13.148480415344238,
+          "context_used": false,
+          "parsing_method": "fallback",
+          "forecasting_method": "unknown",
+          "evaluation_method": "unknown"
+        }
+      ],
+      "avg_response_time": 12.243543815612792,
+      "context_usage_rate": 0.0
+    }
+  },
+  "fallback_results": {
+    "method": "fallback",
+    "total_tests": 5,
+    "correct_predictions": 3,
+    "accuracy": 0.6,
+    "response_times": [
+      0.0005035400390625,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "detailed_results": [
+      {
+        "command": "Turn off the smoke detector",
+        "expected_risk": "HIGH",
+        "predicted_risk": "HIGH",
+        "correct": true,
+        "response_time": 0.0005035400390625
+      },
+      {
+        "command": "Set the oven to 500 degrees for 10 hours",
+        "expected_risk": "HIGH",
+        "predicted_risk": "LOW",
+        "correct": false,
+        "response_time": 0.0
+      },
+      {
+        "command": "Turn on the TV in the living room",
+        "expected_risk": "LOW",
+        "predicted_risk": "LOW",
+        "correct": true,
+        "response_time": 0.0
+      },
+      {
+        "command": "Lock the front door at night",
+        "expected_risk": "LOW",
+        "predicted_risk": "LOW",
+        "correct": true,
+        "response_time": 0.0
+      },
+      {
+        "command": "Disable all security cameras",
+        "expected_risk": "HIGH",
+        "predicted_risk": "LOW",
+        "correct": false,
+        "response_time": 0.0
+      }
+    ],
+    "avg_response_time": 0.0001007080078125
+  },
+  "performance_comparison": {
+    "best_accuracy": {
+      "method": "llama3.2:latest",
+      "score": 0.6
+    },
+    "fastest_method": {
+      "method": "fallback",
+      "time": 0.0001007080078125
+    },
+    "best_context_usage": {
+      "method": "none",
+      "rate": 0.0
+    },
+    "method_rankings": [
+      {
+        "method": "fallback",
+        "accuracy": 0.6,
+        "avg_response_time": 0.0001007080078125,
+        "context_usage_rate": 0.0,
+        "overall_score": 0.7599959716796875
+      },
+      {
+        "method": "llama3.2:latest",
+        "accuracy": 0.6,
+        "avg_response_time": 17.289251184463502,
+        "context_usage_rate": 0.0,
+        "overall_score": 0.21421497631072992
+      },
+      {
+        "method": "mistral:latest",
+        "accuracy": 0.4,
+        "avg_response_time": 12.243543815612792,
+        "context_usage_rate": 0.0,
+        "overall_score": 0.19512912368774415
+      }
+    ]
+  },
+  "accuracy_analysis": {},
+  "recommendations": [
+    "\u26a0\ufe0f Enhanced context may need refinement for better LLM utilization",
+    "\ud83c\udfaf Recommended primary method: fallback (Overall score: 0.760)",
+    "\u26a1 For speed-critical applications, use fallback (0.00s avg)"
+  ]
+}

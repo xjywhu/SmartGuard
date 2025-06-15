@@ -1,0 +1,169 @@
+{
+  "test_summary": "Integrated Smart Home System Test Results",
+  "system_status": {
+    "system_name": "Integrated Smart Home System",
+    "components": {
+      "command_parser": "Active",
+      "risk_predictor": "Active",
+      "decision_engine": "Active"
+    },
+    "knowledge_graph": {
+      "total_areas": 13,
+      "sample_commands": 120
+    },
+    "decision_thresholds": {
+      "auto_execute": 0.3,
+      "require_confirmation": 0.7,
+      "block_command": 0.8
+    },
+    "timestamp": "2025-06-13T16:03:31.885430"
+  },
+  "test_results": [
+    {
+      "command_number": 1,
+      "input_command": {
+        "device": "computer",
+        "location": "Study_Office",
+        "action": "Turn on the computer"
+      },
+      "result": {
+        "input": {
+          "command_text": "Turn on the computer",
+          "device": "computer",
+          "location": "Study_Office",
+          "timestamp": "2025-06-13T16:03:31.882922"
+        },
+        "parsed_action": {
+          "area_of_action": "Study_Office",
+          "device": "Computer",
+          "action_to_be_taken": "Turn on the computer"
+        },
+        "risk_assessment": {
+          "command": {
+            "area_of_action": "Study_Office",
+            "device": "Computer",
+            "action_to_be_taken": "Turn on the computer"
+          },
+          "timestamp": "2025-06-13T16:03:31.882922",
+          "risk_scores": {
+            "environmental_hazards": 0.0,
+            "access_control_threats": 0.0,
+            "personal_data_breaches": 0.0,
+            "temporal_anomalies": 0.0
+          },
+          "overall_risk_score": 0.0,
+          "risk_level": "LOW",
+          "warnings": [],
+          "recommendations": []
+        },
+        "decision": {
+          "action": "execute",
+          "reason": "Command approved for execution (LOW risk, score: 0.0)",
+          "requires_user_confirmation": false,
+          "alternative_suggestions": []
+        },
+        "status": "completed"
+      }
+    },
+    {
+      "command_number": 2,
+      "input_command": {
+        "device": "oven",
+        "location": "kitchen",
+        "action": "Set oven to 500\u00b0F for 8 hours"
+      },
+      "result": {
+        "input": {
+          "command_text": "Set oven to 500\u00b0F for 8 hours",
+          "device": "oven",
+          "location": "kitchen",
+          "timestamp": "2025-06-13T16:03:31.882922"
+        },
+        "parsed_action": {
+          "area_of_action": "Kitchen",
+          "device": "Oven",
+          "action_to_be_taken": "Set oven to 500\u00b0F for 8 hours"
+        },
+        "risk_assessment": {
+          "command": {
+            "area_of_action": "Kitchen",
+            "device": "Oven",
+            "action_to_be_taken": "Set oven to 500\u00b0F for 8 hours"
+          },
+          "timestamp": "2025-06-13T16:03:31.882922",
+          "risk_scores": {
+            "environmental_hazards": 0.8,
+            "access_control_threats": 0.0,
+            "personal_data_breaches": 0.0,
+            "temporal_anomalies": 0.0
+          },
+          "overall_risk_score": 0.32,
+          "risk_level": "LOW",
+          "warnings": [
+            "HIGH ENVIRONMENTAL RISK: Oven operation may cause fire, overheating, or water damage"
+          ],
+          "recommendations": [
+            "Consider reducing temperature/duration or ensure proper supervision"
+          ]
+        },
+        "decision": {
+          "action": "execute_with_monitoring",
+          "reason": "Command will be executed with monitoring due to LOW risk (score: 0.32)",
+          "requires_user_confirmation": false,
+          "alternative_suggestions": []
+        },
+        "status": "completed"
+      }
+    },
+    {
+      "command_number": 3,
+      "input_command": {
+        "device": "smoke_detector",
+        "location": "Garage",
+        "action": "Disable smoke detector"
+      },
+      "result": {
+        "input": {
+          "command_text": "Disable smoke detector",
+          "device": "smoke_detector",
+          "location": "Garage",
+          "timestamp": "2025-06-13T16:03:31.882922"
+        },
+        "parsed_action": {
+          "area_of_action": "Garage",
+          "device": "Smoke_Detector",
+          "action_to_be_taken": "Disable smoke detector"
+        },
+        "risk_assessment": {
+          "command": {
+            "area_of_action": "Garage",
+            "device": "Smoke_Detector",
+            "action_to_be_taken": "Disable smoke detector"
+          },
+          "timestamp": "2025-06-13T16:03:31.882922",
+          "risk_scores": {
+            "environmental_hazards": 0.9,
+            "access_control_threats": 0.0,
+            "personal_data_breaches": 0.0,
+            "temporal_anomalies": 0.0
+          },
+          "overall_risk_score": 0.36,
+          "risk_level": "LOW",
+          "warnings": [
+            "HIGH ENVIRONMENTAL RISK: Smoke_Detector operation may cause fire, overheating, or water damage"
+          ],
+          "recommendations": [
+            "Consider reducing temperature/duration or ensure proper supervision"
+          ]
+        },
+        "decision": {
+          "action": "execute_with_monitoring",
+          "reason": "Command will be executed with monitoring due to LOW risk (score: 0.36)",
+          "requires_user_confirmation": false,
+          "alternative_suggestions": []
+        },
+        "status": "completed"
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "time": "14:30",
+  "user_home": true,
+  "user_asleep": false,
+  "aqi_outdoor": 85,
+  "weather": {
+    "temperature_outdoor": 22,
+    "humidity_outdoor": 65,
+    "condition": "sunny"
+  },
+  "sensors": {
+    "gas_sensor": "OFF",
+    "motion_bathroom": "OFF",
+    "motion_living_room": "ON",
+    "window_bedroom": "CLOSED",
+    "window_kitchen": "CLOSED",
+    "door_main": "LOCKED",
+    "door_balcony": "CLOSED",
+    "presence_sensor": "PRESENT"
+  },
+  "devices": {
+    "smoke_detector": "ON",
+    "ac_bedroom": "OFF",
+    "heater_living_room": "OFF",
+    "washing_machine": "OFF",
+    "fan_kitchen": "OFF",
+    "light_living_room": "ON",
+    "tv_living_room": "OFF",
+    "camera": "ON",
+    "dishwasher": "OFF",
+    "oven": "OFF",
+    "stove": "OFF",
+    "refrigerator": "ON"
+  }
+}

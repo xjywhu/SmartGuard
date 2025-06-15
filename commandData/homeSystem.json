@@ -2,30 +2,40 @@
     "Home_System": {
     "Living_Room": {
     "Security_Camera": {
+    "States": ["recording", "idle", "streaming", "off"],
+    "Default_State": "idle",
     "Functionalities": [
     "Start Recording",
     "Stop Recording",
-    "Stream Live Video"
+    "Stream Live Video",
+    "Turn Off"
     ],
     "Outputs": [
     "Recording Started",
     "Recording Stopped",
-    "Live Feed Displayed"
+    "Live Feed Displayed",
+    "Camera Off"
     ]
     },
-    "Speaker (with microphone)": {
+    "Speaker": {
+    "States": ["playing", "stopped", "muted"],
+    "Default_State": "stopped",
     "Functionalities": [
     "Play Audio",
     "Stop Audio",
-    "Adjust Volume"
+    "Adjust Volume",
+    "Mute"
     ],
     "Outputs": [
     "Audio Playing",
     "Audio Stopped",
-    "Volume Adjusted"
+    "Volume Adjusted",
+    "Speaker Muted"
     ]
     },
-    "TV (with camera/microphone)": {
+    "TV": {
+    "States": ["on", "off", "standby"],
+    "Default_State": "off",
     "Functionalities": [
     "Turn On",
     "Turn Off",
@@ -40,16 +50,30 @@
     ]
     },
     "Thermostat": {
+    "States": ["heating", "cooling", "fan_on", "off"],
+    "Default_State": "off",
+    "Properties": {
+        "current_temperature_celsius": 20,
+        "target_temperature_celsius": 20,
+        "humidity_percent": 45
+    },
     "Functionalities": [
     "Set Temperature",
-    "Turn Off"
+    "Turn Off",
+    "Set Mode"
     ],
     "Outputs": [
     "Temperature Set",
-    "Thermostat Off"
+    "Thermostat Off",
+    "Mode Set"
     ]
     },
     "Fireplace": {
+    "States": ["on", "off", "embers"],
+    "Default_State": "off",
+    "Properties": {
+        "heat_level": "low" 
+    },
     "Functionalities": [
     "Turn On",
     "Turn Off",
@@ -61,7 +85,9 @@
     "Heat Level Adjusted"
     ]
     },
-    "Entertainment Hub (e.g., Chromecast, Apple TV)": {
+    "Entertainment_Hub": {
+    "States": ["streaming", "idle", "updating"],
+    "Default_State": "idle",
     "Functionalities": [
     "Stream Media",
     "Switch Mode",
@@ -74,6 +100,12 @@
     ]
     },
     "Lights": {
+    "States": ["on", "off", "dimmed"],
+    "Default_State": "off",
+    "Properties": {
+        "brightness_percent": 100,
+        "color_rgb": [255, 255, 255]
+    },
     "Functionalities": [
     "Turn On",
     "Turn Off",
@@ -87,31 +119,56 @@
     "Color Changed"
     ]
     },
-    "Motion Sensors": {
+    "Motion_Sensor": {
+    "States": ["detecting", "idle", "alerting"],
+    "Default_State": "idle",
     "Functionalities": [
     "Detect Movement",
-    "Send Alert"
+    "Send Alert",
+    "Arm",
+    "Disarm"
     ],
     "Outputs": [
     "Movement Detected",
-    "Alert Sent"
+    "Alert Sent",
+    "Sensor Armed",
+    "Sensor Disarmed"
     ]
     }
     },
     "Kitchen": {
     "Oven": {
+    "States": ["preheating", "baking", "broiling", "off", "idle"],
+    "Default_State": "off",
+    "Properties": {
+        "current_temperature_celsius": 20,
+        "target_temperature_celsius": 180,
+        "timer_remaining_seconds": 0
+    },
     "Functionalities": [
     "Preheat",
     "Set Timer",
-    "Turn Off"
+    "Turn Off",
+    "Start Baking",
+    "Start Broiling"
     ],
     "Outputs": [
     "Oven Heating",
     "Timer Set",
-    "Oven Off"
+    "Oven Off",
+    "Baking Started",
+    "Broiling Started"
     ]
     },
     "Stove": {
+    "States": ["burner_on", "burner_off", "simmering"],
+    "Default_State": "burner_off",
+    "Properties": {
+        "burner_1_level": "off",
+        "burner_2_level": "off",
+        "burner_3_level": "off",
+        "burner_4_level": "off"
+    },
     "Functionalities": [
     "Turn On Burner",
     "Turn Off Burner",
@@ -123,14 +180,22 @@
     "Heat Level Adjusted"
     ]
     },
-    "Refrigerator (with camera)": {
+    "Refrigerator": {
+    "States": ["cooling", "defrosting", "power_saving", "door_open"],
+    "Default_State": "cooling",
+    "Properties": {
+        "internal_temperature_celsius": 4,
+        "freezer_temperature_celsius": -18
+    },
     "Functionalities": [
     "Adjust Temperature",
-    "Enable Power Saving Mode"
+    "Enable Power Saving Mode",
+    "View Contents" 
     ],
     "Outputs": [
     "Temperature Adjusted",
-    "Power Saving Mode Activated"
+    "Power Saving Mode Activated",
+    "Contents Displayed"
     ]
     },
     "Microwave": {
@@ -195,7 +260,13 @@
     }
     },
     "Bedroom": {
-    "Alarm Clock (with microphone)": {
+    "Alarm_Clock": {
+    "States": ["alarming", "snoozing", "off"],
+    "Default_State": "off",
+    "Properties": {
+        "alarm_time": "07:00",
+        "snooze_duration_minutes": 5
+    },
     "Functionalities": [
     "Set Alarm",
     "Stop Alarm",
@@ -207,55 +278,84 @@
     "Snooze Activated"
     ]
     },
-    "Speaker (with microphone)": {
+    "Speaker": {
+    "States": ["playing", "stopped", "muted"],
+    "Default_State": "stopped",
     "Functionalities": [
     "Play Audio",
     "Stop Audio",
-    "Adjust Volume"
+    "Adjust Volume",
+    "Mute"
     ],
     "Outputs": [
     "Audio Playing",
     "Audio Stopped",
-    "Volume Adjusted"
+    "Volume Adjusted",
+    "Speaker Muted"
     ]
     },
-    "Bed (with sensors)": {
+    "Smart_Bed": {
+    "States": ["occupied", "empty", "heating_on", "heating_off"],
+    "Default_State": "empty",
+    "Properties": {
+        "current_position": "flat",
+        "is_heating": false
+    },
     "Functionalities": [
     "Adjust Position",
     "Monitor Sleep",
-    "Enable Heating"
+    "Enable Heating",
+    "Disable Heating"
     ],
     "Outputs": [
     "Position Adjusted",
     "Sleep Data Recorded",
-    "Heating Enabled"
+    "Heating Enabled",
+    "Heating Disabled"
     ]
     },
-    "Security Camera": {
+    "Security_Camera": {
+    "States": ["recording", "idle", "streaming", "off"],
+    "Default_State": "idle",
     "Functionalities": [
     "Start Recording",
     "Stop Recording",
-    "Stream Live Video"
+    "Stream Live Video",
+    "Turn Off"
     ],
     "Outputs": [
     "Recording Started",
     "Recording Stopped",
-    "Live Feed Displayed"
+    "Live Feed Displayed",
+    "Camera Off"
     ]
     },
     "Lights": {
+    "States": ["on", "off", "dimmed"],
+    "Default_State": "off",
+    "Properties": {
+        "brightness_percent": 100,
+        "color_rgb": [255, 255, 255]
+    },
     "Functionalities": [
     "Turn On",
     "Turn Off",
-    "Dim"
+    "Dim",
+    "Change Color"
     ],
     "Outputs": [
     "Lights On",
     "Lights Off",
-    "Brightness Adjusted"
+    "Brightness Adjusted",
+    "Color Changed"
     ]
     },
-    "Mattress": {
+    "Smart_Mattress": {
+    "States": ["normal_firmness", "adjusted_firmness"],
+    "Default_State": "normal_firmness",
+    "Properties": {
+        "firmness_level": 5 
+    },
     "Functionalities": [
     "Adjust Firmness",
     "Monitor Sleep",
@@ -268,44 +368,66 @@
     ]
     },
     "Humidifier": {
+    "States": ["on", "off", "auto_mode"],
+    "Default_State": "off",
+    "Properties": {
+        "humidity_level_percent": 40,
+        "target_humidity_percent": 50
+    },
     "Functionalities": [
     "Increase Humidity",
     "Decrease Humidity",
-    "Turn Off"
+    "Turn Off",
+    "Set Target Humidity"
     ],
     "Outputs": [
     "Humidity Increased",
     "Humidity Decreased",
-    "Humidifier Off"
+    "Humidifier Off",
+    "Target Humidity Set"
     ]
     }
     },
     "Bathroom": {
-    "Shower (with temperature control)": {
+    "Smart_Shower": {
+    "States": ["running", "off", "paused"],
+    "Default_State": "off",
+    "Properties": {
+        "water_temperature_celsius": 38,
+        "flow_rate_lpm": 10 
+    },
     "Functionalities": [
     "Set Water Temperature",
     "Turn On",
-    "Turn Off"
+    "Turn Off",
+    "Pause Shower"
     ],
     "Outputs": [
     "Temperature Set",
     "Shower Running",
-    "Shower Off"
+    "Shower Off",
+    "Shower Paused"
     ]
     },
-    "Mirror (with display/camera)": {
+    "Smart_Mirror": {
+    "States": ["displaying_info", "idle", "off"],
+    "Default_State": "idle",
     "Functionalities": [
     "Display Information",
     "Record Video",
-    "Show Notifications"
+    "Show Notifications",
+    "Turn Off Display"
     ],
     "Outputs": [
     "Information Displayed",
     "Video Recording Started",
-    "Notifications Shown"
+    "Notifications Shown",
+    "Display Off"
     ]
     },
-    "Scale (with data logging)": {
+    "Smart_Scale": {
+    "States": ["measuring", "idle"],
+    "Default_State": "idle",
     "Functionalities": [
     "Weigh User",
     "Log Data",
@@ -317,19 +439,32 @@
     "Weight Displayed"
     ]
     },
-    "Toilet (with bidet/heating)": {
+    "Smart_Toilet": {
+    "States": ["idle", "bidet_active", "seat_heating_on"],
+    "Default_State": "idle",
+    "Properties": {
+        "bidet_water_temperature_celsius": 35,
+        "seat_temperature_celsius": 30
+    },
     "Functionalities": [
     "Activate Bidet",
     "Adjust Water Temperature",
-    "Enable Seat Heating"
+    "Enable Seat Heating",
+    "Disable Seat Heating"
     ],
     "Outputs": [
     "Bidet Activated",
     "Temperature Adjusted",
-    "Seat Heated"
+    "Seat Heated",
+    "Seat Heating Off"
     ]
     },
-    "Soap Dispenser": {
+    "Soap_Dispenser": {
+    "States": ["idle", "dispensing"],
+    "Default_State": "idle",
+    "Properties": {
+        "dispense_amount_ml": 2
+    },
     "Functionalities": [
     "Dispense Soap",
     "Set Dispense Amount",
@@ -343,17 +478,29 @@
     }
     },
     "Garage": {
-    "Garage Door Opener": {
+    "Garage_Door_Opener": {
+    "States": ["open", "closed", "opening", "closing", "stopped_midway"],
+    "Default_State": "closed",
     "Functionalities": [
     "Open Door",
-    "Close Door"
+    "Close Door",
+    "Check Status",
+    "Stop Door"
     ],
     "Outputs": [
     "Door Opened",
-    "Door Closed"
+    "Door Closed",
+    "Status Checked",
+    "Door Stopped"
     ]
     },
-    "Car Charger": {
+    "Car_Charger": {
+    "States": ["charging", "idle", "faulted"],
+    "Default_State": "idle",
+    "Properties": {
+        "charge_level_percent": 0,
+        "charge_limit_percent": 80
+    },
     "Functionalities": [
     "Start Charging",
     "Stop Charging",
@@ -365,115 +512,171 @@
     "Charge Limit Set"
     ]
     },
-    "Security Camera": {
+    "Security_Camera": {
+    "States": ["recording", "idle", "streaming", "off"],
+    "Default_State": "idle",
     "Functionalities": [
     "Start Recording",
     "Stop Recording",
-    "Stream Live Video"
+    "Stream Live Video",
+    "Turn Off"
     ],
     "Outputs": [
     "Recording Started",
     "Recording Stopped",
-    "Live Feed Displayed"
+    "Live Feed Displayed",
+    "Camera Off"
     ]
     },
-    "Smoke Detector": {
+    "Smoke_Detector": {
+    "States": ["armed", "disarmed", "alarm_sounding", "silenced"],
+    "Default_State": "armed",
     "Functionalities": [
     "Detect Smoke",
     "Sound Alarm",
-    "Send Alert"
+    "Send Notification",
+    "Silence Alarm",
+    "Arm Detector",
+    "Disarm Detector"
     ],
     "Outputs": [
     "Smoke Detected",
     "Alarm Sounding",
-    "Alert Sent"
+    "Notification Sent",
+    "Alarm Silenced",
+    "Detector Armed",
+    "Detector Disarmed"
     ]
     },
-    "Motion Sensor": {
+    "Motion_Sensor": {
+    "States": ["detecting", "idle", "alerting"],
+    "Default_State": "idle",
     "Functionalities": [
     "Detect Movement",
-    "Send Alert"
+    "Send Alert",
+    "Arm",
+    "Disarm"
     ],
     "Outputs": [
     "Movement Detected",
-    "Alert Sent"
+    "Alert Sent",
+    "Sensor Armed",
+    "Sensor Disarmed"
     ]
     }
     },
     "Front_Porch": {
-    "Doorbell (with camera)": {
+    "Doorbell_Camera": {
+    "States": ["ringing", "recording", "idle", "streaming"],
+    "Default_State": "idle",
     "Functionalities": [
     "Ring",
     "Record Visitor",
-    "Stream Video"
+    "Stream Video",
+    "Two-Way Audio"
     ],
     "Outputs": [
     "Doorbell Rung",
     "Visitor Recorded",
-    "Live Feed Displayed"
+    "Live Feed Displayed",
+    "Audio Started"
     ]
     },
-    "Security Camera": {
+    "Security_Camera": {
+    "States": ["recording", "idle", "streaming", "off"],
+    "Default_State": "idle",
     "Functionalities": [
     "Start Recording",
     "Stop Recording",
-    "Stream Live Video"
+    "Stream Live Video",
+    "Turn Off"
     ],
     "Outputs": [
     "Recording Started",
     "Recording Stopped",
-    "Live Feed Displayed"
+    "Live Feed Displayed",
+    "Camera Off"
     ]
     },
-    "Lock": {
+    "Smart_Lock": {
+    "States": ["locked", "unlocked", "jammed"],
+    "Default_State": "locked",
     "Functionalities": [
     "Lock",
-    "Unlock"
+    "Unlock",
+    "Check Status"
     ],
     "Outputs": [
     "Locked",
-    "Unlocked"
+    "Unlocked",
+    "Status Reported"
     ]
     },
     "Lights": {
+    "States": ["on", "off", "dimmed"],
+    "Default_State": "off",
+    "Properties": {
+        "brightness_percent": 100,
+        "color_rgb": [255, 255, 255]
+    },
     "Functionalities": [
     "Turn On",
     "Turn Off",
-    "Dim"
+    "Dim",
+    "Change Color"
     ],
     "Outputs": [
     "Lights On",
     "Lights Off",
-    "Brightness Adjusted"
+    "Brightness Adjusted",
+    "Color Changed"
     ]
     }
     },
     "Backyard": {
-    "Sprinkler System": {
+    "Sprinkler_System": {
+    "States": ["watering", "idle", "scheduled"],
+    "Default_State": "idle",
+    "Properties": {
+        "watering_duration_minutes": 30,
+        "next_schedule_time": "06:00"
+    },
     "Functionalities": [
     "Start Watering",
     "Stop Watering",
-    "Set Watering Duration"
+    "Set Watering Duration",
+    "Schedule Watering"
     ],
     "Outputs": [
     "Watering Started",
     "Watering Stopped",
-    "Duration Set"
+    "Duration Set",
+    "Schedule Set"
     ]
     },
-    "Security Camera": {
+    "Security_Camera": {
+    "States": ["recording", "idle", "streaming", "off"],
+    "Default_State": "idle",
     "Functionalities": [
     "Start Recording",
     "Stop Recording",
-    "Stream Live Video"
+    "Stream Live Video",
+    "Turn Off"
     ],
     "Outputs": [
     "Recording Started",
     "Recording Stopped",
-    "Live Feed Displayed"
+    "Live Feed Displayed",
+    "Camera Off"
     ]
     },
-    "Pool Heater": {
+    "Pool_Heater": {
+    "States": ["heating", "idle", "off"],
+    "Default_State": "off",
+    "Properties": {
+        "current_temperature_celsius": 20,
+        "target_temperature_celsius": 28
+    },
     "Functionalities": [
     "Set Temperature",
     "Turn On",
@@ -485,93 +688,138 @@
     "Heater Off"
     ]
     },
-    "Motion Sensor": {
+    "Motion_Sensor": {
+    "States": ["detecting", "idle", "alerting"],
+    "Default_State": "idle",
     "Functionalities": [
     "Detect Movement",
-    "Send Alert"
+    "Send Alert",
+    "Arm",
+    "Disarm"
     ],
     "Outputs": [
     "Movement Detected",
-    "Alert Sent"
+    "Alert Sent",
+    "Sensor Armed",
+    "Sensor Disarmed"
     ]
     },
-    "Outdoor Lighting": {
+    "Outdoor_Lighting": {
+    "States": ["on", "off", "dimmed", "color_set"],
+    "Default_State": "off",
+    "Properties": {
+        "brightness_percent": 100,
+        "color_rgb": [255, 255, 255]
+    },
     "Functionalities": [
     "Turn On",
     "Turn Off",
-    "Dim"
+    "Dim",
+    "Change Color"
     ],
     "Outputs": [
     "Lights On",
     "Lights Off",
-    "Brightness Adjusted"
+    "Brightness Adjusted",
+    "Color Changed"
     ]
     }
     },
     "Study_Office": {
-    "Speaker (with microphone)": {
+    "Speaker": {
+    "States": ["playing", "stopped", "muted"],
+    "Default_State": "stopped",
     "Functionalities": [
     "Play Audio",
     "Stop Audio",
-    "Adjust Volume"
+    "Adjust Volume",
+    "Mute"
     ],
     "Outputs": [
     "Audio Playing",
     "Audio Stopped",
-    "Volume Adjusted"
+    "Volume Adjusted",
+    "Speaker Muted"
     ]
     },
-    "Printer (with scanner)": {
+    "Printer_Scanner": {
+    "States": ["printing", "scanning", "idle", "error"],
+    "Default_State": "idle",
     "Functionalities": [
     "Print Document",
     "Scan Document",
-    "Cancel Operation"
+    "Cancel Operation",
+    "Check Ink Levels"
     ],
     "Outputs": [
     "Document Printed",
     "Document Scanned",
-    "Operation Cancelled"
+    "Operation Cancelled",
+    "Ink Levels Reported"
     ]
     },
     "Computer": {
+    "States": ["on", "off", "sleep", "locked"],
+    "Default_State": "off",
     "Functionalities": [
     "Execute Command",
     "Access Files",
-    "Run Software"
+    "Run Software",
+    "Lock Screen",
+    "Shutdown"
     ],
     "Outputs": [
     "Command Executed",
     "Files Accessed",
-    "Software Running"
+    "Software Running",
+    "Screen Locked",
+    "Shutting Down"
     ]
     },
     "Lights": {
+    "States": ["on", "off", "dimmed"],
+    "Default_State": "off",
+    "Properties": {
+        "brightness_percent": 100,
+        "color_rgb": [255, 255, 255]
+    },
     "Functionalities": [
     "Turn On",
     "Turn Off",
-    "Dim"
+    "Dim",
+    "Change Color"
     ],
     "Outputs": [
     "Lights On",
     "Lights Off",
-    "Brightness Adjusted"
+    "Brightness Adjusted",
+    "Color Changed"
     ]
     }
     },
     "Basement": {
-    "Security Camera": {
+    "Security_Camera": {
+    "States": ["recording", "idle", "streaming", "off"],
+    "Default_State": "idle",
     "Functionalities": [
     "Start Recording",
     "Stop Recording",
-    "Stream Live Video"
+    "Stream Live Video",
+    "Turn Off"
     ],
     "Outputs": [
     "Recording Started",
     "Recording Stopped",
-    "Live Feed Displayed"
+    "Live Feed Displayed",
+    "Camera Off"
     ]
     },
-    "Sump Pump": {
+    "Sump_Pump": {
+    "States": ["pumping", "idle", "faulted"],
+    "Default_State": "idle",
+    "Properties": {
+        "water_level_status": "normal"
+    },
     "Functionalities": [
     "Activate Pump",
     "Deactivate Pump",
@@ -584,92 +832,144 @@
     ]
     },
     "Dehumidifier": {
+    "States": ["on", "off", "auto_mode"],
+    "Default_State": "off",
+    "Properties": {
+        "current_humidity_percent": 60,
+        "target_humidity_percent": 50
+    },
     "Functionalities": [
     "Increase Dehumidification",
     "Decrease Dehumidification",
-    "Turn Off"
+    "Turn Off",
+    "Set Target Humidity"
     ],
     "Outputs": [
     "Dehumidification Increased",
     "Dehumidification Decreased",
-    "Dehumidifier Off"
+    "Dehumidifier Off",
+    "Target Humidity Set"
     ]
     },
-    "Smoke Detector": {
+    "Smoke_Detector": {
+    "States": ["armed", "disarmed", "alarm_sounding", "silenced"],
+    "Default_State": "armed",
     "Functionalities": [
     "Detect Smoke",
     "Sound Alarm",
-    "Send Alert"
+    "Send Notification",
+    "Silence Alarm",
+    "Arm Detector",
+    "Disarm Detector"
     ],
     "Outputs": [
     "Smoke Detected",
     "Alarm Sounding",
-    "Alert Sent"
+    "Notification Sent",
+    "Alarm Silenced",
+    "Detector Armed",
+    "Detector Disarmed"
     ]
     }
     },
     "Hallway": {
-    "Security Camera": {
+    "Security_Camera": {
+    "States": ["recording", "idle", "streaming", "off"],
+    "Default_State": "idle",
     "Functionalities": [
     "Start Recording",
     "Stop Recording",
-    "Stream Live Video"
+    "Stream Live Video",
+    "Turn Off"
     ],
     "Outputs": [
     "Recording Started",
     "Recording Stopped",
-    "Live Feed Displayed"
+    "Live Feed Displayed",
+    "Camera Off"
     ]
     },
-    "Smoke Detector": {
+    "Smoke_Detector": {
+    "States": ["armed", "disarmed", "alarm_sounding", "silenced"],
+    "Default_State": "armed",
     "Functionalities": [
     "Detect Smoke",
     "Sound Alarm",
-    "Send Alert"
+    "Send Notification",
+    "Silence Alarm",
+    "Arm Detector",
+    "Disarm Detector"
     ],
     "Outputs": [
     "Smoke Detected",
     "Alarm Sounding",
-    "Alert Sent"
+    "Notification Sent",
+    "Alarm Silenced",
+    "Detector Armed",
+    "Detector Disarmed"
     ]
     },
-    "Motion Sensor": {
+    "Motion_Sensor": {
+    "States": ["detecting", "idle", "alerting"],
+    "Default_State": "idle",
     "Functionalities": [
     "Detect Movement",
-    "Send Alert"
+    "Send Alert",
+    "Arm",
+    "Disarm"
     ],
     "Outputs": [
     "Movement Detected",
-    "Alert Sent"
+    "Alert Sent",
+    "Sensor Armed",
+    "Sensor Disarmed"
     ]
     },
     "Lights": {
+    "States": ["on", "off", "dimmed"],
+    "Default_State": "off",
+    "Properties": {
+        "brightness_percent": 100,
+        "color_rgb": [255, 255, 255]
+    },
     "Functionalities": [
     "Turn On",
     "Turn Off",
-    "Dim"
+    "Dim",
+    "Change Color"
     ],
     "Outputs": [
     "Lights On",
     "Lights Off",
-    "Brightness Adjusted"
+    "Brightness Adjusted",
+    "Color Changed"
     ]
     }
     },
     "Guest_Room": {
-    "Speaker (with microphone)": {
+    "Speaker": {
+    "States": ["playing", "stopped", "muted"],
+    "Default_State": "stopped",
     "Functionalities": [
     "Play Audio",
     "Stop Audio",
-    "Adjust Volume"
+    "Adjust Volume",
+    "Mute"
     ],
     "Outputs": [
     "Audio Playing",
     "Audio Stopped",
-    "Volume Adjusted"
+    "Volume Adjusted",
+    "Speaker Muted"
     ]
     },
-    "Alarm Clock (with microphone)": {
+    "Alarm_Clock": {
+    "States": ["alarming", "snoozing", "off"],
+    "Default_State": "off",
+    "Properties": {
+        "alarm_time": "07:00",
+        "snooze_duration_minutes": 5
+    },
     "Functionalities": [
     "Set Alarm",
     "Stop Alarm",
@@ -682,6 +982,8 @@
     ]
     },
     "TV": {
+    "States": ["on", "off", "standby"],
+    "Default_State": "off",
     "Functionalities": [
     "Turn On",
     "Turn Off",
@@ -696,16 +998,27 @@
     ]
     },
     "Thermostat": {
+    "States": ["heating", "cooling", "fan_on", "off"],
+    "Default_State": "off",
+    "Properties": {
+        "current_temperature_celsius": 20,
+        "target_temperature_celsius": 20,
+        "humidity_percent": 45
+    },
     "Functionalities": [
     "Set Temperature",
-    "Turn Off"
+    "Turn Off",
+    "Set Mode"
     ],
     "Outputs": [
     "Temperature Set",
-    "Thermostat Off"
+    "Thermostat Off",
+    "Mode Set"
     ]
     },
-    "Light Switch": {
+    "Light_Switch": {
+    "States": ["on", "off"],
+    "Default_State": "off",
     "Functionalities": [
     "Toggle On/Off"
     ],
@@ -715,19 +1028,29 @@
     }
     },
     "Patio": {
-    "Speaker (with microphone)": {
+    "Speaker": {
+    "States": ["playing", "stopped", "muted"],
+    "Default_State": "stopped",
     "Functionalities": [
     "Play Audio",
     "Stop Audio",
-    "Adjust Volume"
+    "Adjust Volume",
+    "Mute"
     ],
     "Outputs": [
     "Audio Playing",
     "Audio Stopped",
-    "Volume Adjusted"
+    "Volume Adjusted",
+    "Speaker Muted"
     ]
     },
-    "Heater": {
+    "Patio_Heater": {
+    "States": ["on", "off", "heating"],
+    "Default_State": "off",
+    "Properties": {
+        "current_temperature_celsius": 15,
+        "target_temperature_celsius": 25
+    },
     "Functionalities": [
     "Turn On",
     "Turn Off",
@@ -740,95 +1063,151 @@
     ]
     },
     "Grill": {
+    "States": ["ignited", "off", "preheating", "cooking"],
+    "Default_State": "off",
+    "Properties": {
+        "current_temperature_celsius": 20,
+        "target_temperature_celsius": 200
+    },
     "Functionalities": [
     "Start Ignition",
     "Stop Ignition",
-    "Adjust Temperature"
+    "Adjust Temperature",
+    "Preheat"
     ],
     "Outputs": [
     "Grill Ignited",
     "Grill Off",
-    "Temperature Adjusted"
+    "Temperature Adjusted",
+    "Preheating Started"
     ]
     },
-    "Outdoor Fridge": {
+    "Outdoor_Fridge": {
+    "States": ["cooling", "defrosting", "idle"],
+    "Default_State": "idle",
+    "Properties": {
+        "internal_temperature_celsius": 5
+    },
     "Functionalities": [
     "Cool",
     "Defrost",
-    "Display Temperature"
+    "Display Temperature",
+    "Set Temperature"
     ],
     "Outputs": [
     "Cooling Activated",
     "Defrost Initiated",
-    "Temperature Displayed"
+    "Temperature Displayed",
+    "Temperature Set"
     ]
     },
-    "Motion-Activated Camera": {
+    "Motion_Activated_Camera": {
+    "States": ["recording", "idle", "streaming", "off"],
+    "Default_State": "idle",
     "Functionalities": [
     "Start Recording",
     "Stop Recording",
-    "Stream Live Video"
+    "Stream Live Video",
+    "Turn Off"
     ],
     "Outputs": [
     "Recording Started",
     "Recording Stopped",
-    "Live Feed Displayed"
+    "Live Feed Displayed",
+    "Camera Off"
     ]
     }
     },
     "Whole_House_Systems": {
     "Central_Thermostat": {
+    "States": ["heating", "cooling", "fan_on", "off", "auto"],
+    "Default_State": "off",
+    "Properties": {
+        "global_current_temperature_celsius": 21,
+        "global_target_temperature_celsius": 22,
+        "mode": "auto" 
+    },
     "Functionalities": [
     "Set Global Temperature",
-    "Turn Off Heating/Cooling"
+    "Turn Off Heating/Cooling",
+    "Set Mode (Heat/Cool/Auto/Fan)"
     ],
     "Outputs": [
     "Global Temperature Set",
-    "Climate Control Off"
+    "Climate Control Off",
+    "System Mode Set"
     ]
     },
     "Security_System": {
+    "States": ["armed_away", "armed_stay", "disarmed", "alarm_triggered"],
+    "Default_State": "disarmed",
     "Functionalities": [
-    "Activate Alarm",
+    "Activate Alarm (Away)",
+    "Activate Alarm (Stay)",
     "Deactivate Alarm",
-    "Lock/Unlock Doors"
+    "Lock/Unlock Doors",
+    "Panic Button"
     ],
     "Outputs": [
-    "Security Mode Activated",
+    "Security Mode Activated (Away)",
+    "Security Mode Activated (Stay)",
     "Security Mode Deactivated",
-    "Doors Locked/Unlocked"
+    "Doors Locked/Unlocked",
+    "Panic Alarm Triggered"
     ]
     },
-    "Lock (for main entry points)": {
+    "Main_Entry_Lock": {
+    "States": ["locked", "unlocked", "jammed"],
+    "Default_State": "locked",
     "Functionalities": [
     "Lock",
-    "Unlock"
+    "Unlock",
+    "Check Status"
     ],
     "Outputs": [
     "Main Door Locked",
-    "Main Door Unlocked"
+    "Main Door Unlocked",
+    "Lock Status Reported"
     ]
     },
-    "Vacuum Cleaner (with navigation camera)": {
+    "Robotic_Vacuum_Cleaner": {
+    "States": ["cleaning", "docked", "returning_to_dock", "stuck", "error"],
+    "Default_State": "docked",
+    "Properties": {
+        "battery_level_percent": 100,
+        "bin_full": false
+    },
     "Functionalities": [
     "Start Cleaning",
     "Stop Cleaning",
-    "Map Layout"
+    "Map Layout",
+    "Return to Dock",
+    "Empty Bin (if capable)"
     ],
     "Outputs": [
     "Cleaning Started",
     "Cleaning Stopped",
-    "Layout Mapped"
+    "Layout Mapped",
+    "Returning to Dock",
+    "Bin Emptied"
     ]
     },
-    "Smart Meter": {
+    "Smart_Energy_Meter": {
+    "States": ["monitoring", "reporting", "offline"],
+    "Default_State": "monitoring",
+    "Properties": {
+        "current_usage_kw": 1.5,
+        "total_consumption_kwh_daily": 10
+    },
     "Functionalities": [
     "Measure Energy Usage",
-    "Report Consumption"
+    "Report Consumption",
+    "Get Realtime Usage"
     ],
     "Outputs": [
     "Usage Measured",
-    "Consumption Reported"
+    "Consumption Reported",
+    "Realtime Usage Provided"
     ]
     }
     }
