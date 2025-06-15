@@ -183,6 +183,7 @@ class SmartGuard(nn.Module):
         self.mask_ratio = mask_ratio
         self.mask_step = mask_step
         self.fc = nn.Linear(d_model, vocab_size)
+        self.TTPE_flag = True  # Enable Three-level Time-aware Position Embedding by default
 
     def forward(self, x, loss_vector, epoch, duration_emb):
         # Ensure x is of shape (sequence_length, batch_size)

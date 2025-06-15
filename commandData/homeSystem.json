@@ -1,0 +1,836 @@
+{
+    "Home_System": {
+    "Living_Room": {
+    "Security_Camera": {
+    "Functionalities": [
+    "Start Recording",
+    "Stop Recording",
+    "Stream Live Video"
+    ],
+    "Outputs": [
+    "Recording Started",
+    "Recording Stopped",
+    "Live Feed Displayed"
+    ]
+    },
+    "Speaker (with microphone)": {
+    "Functionalities": [
+    "Play Audio",
+    "Stop Audio",
+    "Adjust Volume"
+    ],
+    "Outputs": [
+    "Audio Playing",
+    "Audio Stopped",
+    "Volume Adjusted"
+    ]
+    },
+    "TV (with camera/microphone)": {
+    "Functionalities": [
+    "Turn On",
+    "Turn Off",
+    "Change Channel",
+    "Adjust Volume"
+    ],
+    "Outputs": [
+    "TV On",
+    "TV Off",
+    "Channel Changed",
+    "Volume Adjusted"
+    ]
+    },
+    "Thermostat": {
+    "Functionalities": [
+    "Set Temperature",
+    "Turn Off"
+    ],
+    "Outputs": [
+    "Temperature Set",
+    "Thermostat Off"
+    ]
+    },
+    "Fireplace": {
+    "Functionalities": [
+    "Turn On",
+    "Turn Off",
+    "Adjust Heat Level"
+    ],
+    "Outputs": [
+    "Fireplace Lit",
+    "Fireplace Off",
+    "Heat Level Adjusted"
+    ]
+    },
+    "Entertainment Hub (e.g., Chromecast, Apple TV)": {
+    "Functionalities": [
+    "Stream Media",
+    "Switch Mode",
+    "Update Software"
+    ],
+    "Outputs": [
+    "Media Streaming",
+    "Mode Changed",
+    "Software Updated"
+    ]
+    },
+    "Lights": {
+    "Functionalities": [
+    "Turn On",
+    "Turn Off",
+    "Dim",
+    "Change Color"
+    ],
+    "Outputs": [
+    "Lights On",
+    "Lights Off",
+    "Brightness Adjusted",
+    "Color Changed"
+    ]
+    },
+    "Motion Sensors": {
+    "Functionalities": [
+    "Detect Movement",
+    "Send Alert"
+    ],
+    "Outputs": [
+    "Movement Detected",
+    "Alert Sent"
+    ]
+    }
+    },
+    "Kitchen": {
+    "Oven": {
+    "Functionalities": [
+    "Preheat",
+    "Set Timer",
+    "Turn Off"
+    ],
+    "Outputs": [
+    "Oven Heating",
+    "Timer Set",
+    "Oven Off"
+    ]
+    },
+    "Stove": {
+    "Functionalities": [
+    "Turn On Burner",
+    "Turn Off Burner",
+    "Adjust Heat Level"
+    ],
+    "Outputs": [
+    "Burner On",
+    "Burner Off",
+    "Heat Level Adjusted"
+    ]
+    },
+    "Refrigerator (with camera)": {
+    "Functionalities": [
+    "Adjust Temperature",
+    "Enable Power Saving Mode"
+    ],
+    "Outputs": [
+    "Temperature Adjusted",
+    "Power Saving Mode Activated"
+    ]
+    },
+    "Microwave": {
+    "Functionalities": [
+    "Start Heating",
+    "Set Timer",
+    "Stop Heating"
+    ],
+    "Outputs": [
+    "Microwave Running",
+    "Timer Set",
+    "Microwave Off"
+    ]
+    },
+    "Dishwasher": {
+    "Functionalities": [
+    "Start Cycle",
+    "Stop Cycle",
+    "Activate Self-Cleaning"
+    ],
+    "Outputs": [
+    "Cycle Started",
+    "Cycle Stopped",
+    "Self-Cleaning Activated"
+    ]
+    },
+    "Coffee Maker": {
+    "Functionalities": [
+    "Brew Coffee",
+    "Stop Brewing",
+    "Set Brew Strength"
+    ],
+    "Outputs": [
+    "Coffee Brewing",
+    "Brewing Stopped",
+    "Brew Strength Adjusted"
+    ]
+    },
+    "Trash Bin": {
+    "Functionalities": [
+    "Monitor Waste Level",
+    "Initiate Auto-Empty",
+    "Log Disposal Data"
+    ],
+    "Outputs": [
+    "Waste Level Reported",
+    "Auto-Empty Initiated",
+    "Data Logged"
+    ]
+    },
+    "Water Dispenser": {
+    "Functionalities": [
+    "Dispense Water",
+    "Set Temperature",
+    "Stop Dispensing"
+    ],
+    "Outputs": [
+    "Water Dispensed",
+    "Temperature Set",
+    "Dispensing Stopped"
+    ]
+    }
+    },
+    "Bedroom": {
+    "Alarm Clock (with microphone)": {
+    "Functionalities": [
+    "Set Alarm",
+    "Stop Alarm",
+    "Activate Snooze"
+    ],
+    "Outputs": [
+    "Alarm Set",
+    "Alarm Stopped",
+    "Snooze Activated"
+    ]
+    },
+    "Speaker (with microphone)": {
+    "Functionalities": [
+    "Play Audio",
+    "Stop Audio",
+    "Adjust Volume"
+    ],
+    "Outputs": [
+    "Audio Playing",
+    "Audio Stopped",
+    "Volume Adjusted"
+    ]
+    },
+    "Bed (with sensors)": {
+    "Functionalities": [
+    "Adjust Position",
+    "Monitor Sleep",
+    "Enable Heating"
+    ],
+    "Outputs": [
+    "Position Adjusted",
+    "Sleep Data Recorded",
+    "Heating Enabled"
+    ]
+    },
+    "Security Camera": {
+    "Functionalities": [
+    "Start Recording",
+    "Stop Recording",
+    "Stream Live Video"
+    ],
+    "Outputs": [
+    "Recording Started",
+    "Recording Stopped",
+    "Live Feed Displayed"
+    ]
+    },
+    "Lights": {
+    "Functionalities": [
+    "Turn On",
+    "Turn Off",
+    "Dim"
+    ],
+    "Outputs": [
+    "Lights On",
+    "Lights Off",
+    "Brightness Adjusted"
+    ]
+    },
+    "Mattress": {
+    "Functionalities": [
+    "Adjust Firmness",
+    "Monitor Sleep",
+    "Log Biometric Data"
+    ],
+    "Outputs": [
+    "Firmness Adjusted",
+    "Sleep Data Recorded",
+    "Biometric Data Logged"
+    ]
+    },
+    "Humidifier": {
+    "Functionalities": [
+    "Increase Humidity",
+    "Decrease Humidity",
+    "Turn Off"
+    ],
+    "Outputs": [
+    "Humidity Increased",
+    "Humidity Decreased",
+    "Humidifier Off"
+    ]
+    }
+    },
+    "Bathroom": {
+    "Shower (with temperature control)": {
+    "Functionalities": [
+    "Set Water Temperature",
+    "Turn On",
+    "Turn Off"
+    ],
+    "Outputs": [
+    "Temperature Set",
+    "Shower Running",
+    "Shower Off"
+    ]
+    },
+    "Mirror (with display/camera)": {
+    "Functionalities": [
+    "Display Information",
+    "Record Video",
+    "Show Notifications"
+    ],
+    "Outputs": [
+    "Information Displayed",
+    "Video Recording Started",
+    "Notifications Shown"
+    ]
+    },
+    "Scale (with data logging)": {
+    "Functionalities": [
+    "Weigh User",
+    "Log Data",
+    "Display Weight"
+    ],
+    "Outputs": [
+    "Weight Measured",
+    "Data Logged",
+    "Weight Displayed"
+    ]
+    },
+    "Toilet (with bidet/heating)": {
+    "Functionalities": [
+    "Activate Bidet",
+    "Adjust Water Temperature",
+    "Enable Seat Heating"
+    ],
+    "Outputs": [
+    "Bidet Activated",
+    "Temperature Adjusted",
+    "Seat Heated"
+    ]
+    },
+    "Soap Dispenser": {
+    "Functionalities": [
+    "Dispense Soap",
+    "Set Dispense Amount",
+    "Stop Dispensing"
+    ],
+    "Outputs": [
+    "Soap Dispensed",
+    "Amount Adjusted",
+    "Dispensing Stopped"
+    ]
+    }
+    },
+    "Garage": {
+    "Garage Door Opener": {
+    "Functionalities": [
+    "Open Door",
+    "Close Door"
+    ],
+    "Outputs": [
+    "Door Opened",
+    "Door Closed"
+    ]
+    },
+    "Car Charger": {
+    "Functionalities": [
+    "Start Charging",
+    "Stop Charging",
+    "Set Charge Limit"
+    ],
+    "Outputs": [
+    "Charging Started",
+    "Charging Stopped",
+    "Charge Limit Set"
+    ]
+    },
+    "Security Camera": {
+    "Functionalities": [
+    "Start Recording",
+    "Stop Recording",
+    "Stream Live Video"
+    ],
+    "Outputs": [
+    "Recording Started",
+    "Recording Stopped",
+    "Live Feed Displayed"
+    ]
+    },
+    "Smoke Detector": {
+    "Functionalities": [
+    "Detect Smoke",
+    "Sound Alarm",
+    "Send Alert"
+    ],
+    "Outputs": [
+    "Smoke Detected",
+    "Alarm Sounding",
+    "Alert Sent"
+    ]
+    },
+    "Motion Sensor": {
+    "Functionalities": [
+    "Detect Movement",
+    "Send Alert"
+    ],
+    "Outputs": [
+    "Movement Detected",
+    "Alert Sent"
+    ]
+    }
+    },
+    "Front_Porch": {
+    "Doorbell (with camera)": {
+    "Functionalities": [
+    "Ring",
+    "Record Visitor",
+    "Stream Video"
+    ],
+    "Outputs": [
+    "Doorbell Rung",
+    "Visitor Recorded",
+    "Live Feed Displayed"
+    ]
+    },
+    "Security Camera": {
+    "Functionalities": [
+    "Start Recording",
+    "Stop Recording",
+    "Stream Live Video"
+    ],
+    "Outputs": [
+    "Recording Started",
+    "Recording Stopped",
+    "Live Feed Displayed"
+    ]
+    },
+    "Lock": {
+    "Functionalities": [
+    "Lock",
+    "Unlock"
+    ],
+    "Outputs": [
+    "Locked",
+    "Unlocked"
+    ]
+    },
+    "Lights": {
+    "Functionalities": [
+    "Turn On",
+    "Turn Off",
+    "Dim"
+    ],
+    "Outputs": [
+    "Lights On",
+    "Lights Off",
+    "Brightness Adjusted"
+    ]
+    }
+    },
+    "Backyard": {
+    "Sprinkler System": {
+    "Functionalities": [
+    "Start Watering",
+    "Stop Watering",
+    "Set Watering Duration"
+    ],
+    "Outputs": [
+    "Watering Started",
+    "Watering Stopped",
+    "Duration Set"
+    ]
+    },
+    "Security Camera": {
+    "Functionalities": [
+    "Start Recording",
+    "Stop Recording",
+    "Stream Live Video"
+    ],
+    "Outputs": [
+    "Recording Started",
+    "Recording Stopped",
+    "Live Feed Displayed"
+    ]
+    },
+    "Pool Heater": {
+    "Functionalities": [
+    "Set Temperature",
+    "Turn On",
+    "Turn Off"
+    ],
+    "Outputs": [
+    "Temperature Set",
+    "Heater On",
+    "Heater Off"
+    ]
+    },
+    "Motion Sensor": {
+    "Functionalities": [
+    "Detect Movement",
+    "Send Alert"
+    ],
+    "Outputs": [
+    "Movement Detected",
+    "Alert Sent"
+    ]
+    },
+    "Outdoor Lighting": {
+    "Functionalities": [
+    "Turn On",
+    "Turn Off",
+    "Dim"
+    ],
+    "Outputs": [
+    "Lights On",
+    "Lights Off",
+    "Brightness Adjusted"
+    ]
+    }
+    },
+    "Study_Office": {
+    "Speaker (with microphone)": {
+    "Functionalities": [
+    "Play Audio",
+    "Stop Audio",
+    "Adjust Volume"
+    ],
+    "Outputs": [
+    "Audio Playing",
+    "Audio Stopped",
+    "Volume Adjusted"
+    ]
+    },
+    "Printer (with scanner)": {
+    "Functionalities": [
+    "Print Document",
+    "Scan Document",
+    "Cancel Operation"
+    ],
+    "Outputs": [
+    "Document Printed",
+    "Document Scanned",
+    "Operation Cancelled"
+    ]
+    },
+    "Computer": {
+    "Functionalities": [
+    "Execute Command",
+    "Access Files",
+    "Run Software"
+    ],
+    "Outputs": [
+    "Command Executed",
+    "Files Accessed",
+    "Software Running"
+    ]
+    },
+    "Lights": {
+    "Functionalities": [
+    "Turn On",
+    "Turn Off",
+    "Dim"
+    ],
+    "Outputs": [
+    "Lights On",
+    "Lights Off",
+    "Brightness Adjusted"
+    ]
+    }
+    },
+    "Basement": {
+    "Security Camera": {
+    "Functionalities": [
+    "Start Recording",
+    "Stop Recording",
+    "Stream Live Video"
+    ],
+    "Outputs": [
+    "Recording Started",
+    "Recording Stopped",
+    "Live Feed Displayed"
+    ]
+    },
+    "Sump Pump": {
+    "Functionalities": [
+    "Activate Pump",
+    "Deactivate Pump",
+    "Monitor Water Level"
+    ],
+    "Outputs": [
+    "Pump Activated",
+    "Pump Deactivated",
+    "Water Level Monitored"
+    ]
+    },
+    "Dehumidifier": {
+    "Functionalities": [
+    "Increase Dehumidification",
+    "Decrease Dehumidification",
+    "Turn Off"
+    ],
+    "Outputs": [
+    "Dehumidification Increased",
+    "Dehumidification Decreased",
+    "Dehumidifier Off"
+    ]
+    },
+    "Smoke Detector": {
+    "Functionalities": [
+    "Detect Smoke",
+    "Sound Alarm",
+    "Send Alert"
+    ],
+    "Outputs": [
+    "Smoke Detected",
+    "Alarm Sounding",
+    "Alert Sent"
+    ]
+    }
+    },
+    "Hallway": {
+    "Security Camera": {
+    "Functionalities": [
+    "Start Recording",
+    "Stop Recording",
+    "Stream Live Video"
+    ],
+    "Outputs": [
+    "Recording Started",
+    "Recording Stopped",
+    "Live Feed Displayed"
+    ]
+    },
+    "Smoke Detector": {
+    "Functionalities": [
+    "Detect Smoke",
+    "Sound Alarm",
+    "Send Alert"
+    ],
+    "Outputs": [
+    "Smoke Detected",
+    "Alarm Sounding",
+    "Alert Sent"
+    ]
+    },
+    "Motion Sensor": {
+    "Functionalities": [
+    "Detect Movement",
+    "Send Alert"
+    ],
+    "Outputs": [
+    "Movement Detected",
+    "Alert Sent"
+    ]
+    },
+    "Lights": {
+    "Functionalities": [
+    "Turn On",
+    "Turn Off",
+    "Dim"
+    ],
+    "Outputs": [
+    "Lights On",
+    "Lights Off",
+    "Brightness Adjusted"
+    ]
+    }
+    },
+    "Guest_Room": {
+    "Speaker (with microphone)": {
+    "Functionalities": [
+    "Play Audio",
+    "Stop Audio",
+    "Adjust Volume"
+    ],
+    "Outputs": [
+    "Audio Playing",
+    "Audio Stopped",
+    "Volume Adjusted"
+    ]
+    },
+    "Alarm Clock (with microphone)": {
+    "Functionalities": [
+    "Set Alarm",
+    "Stop Alarm",
+    "Activate Snooze"
+    ],
+    "Outputs": [
+    "Alarm Set",
+    "Alarm Stopped",
+    "Snooze Activated"
+    ]
+    },
+    "TV": {
+    "Functionalities": [
+    "Turn On",
+    "Turn Off",
+    "Change Channel",
+    "Adjust Volume"
+    ],
+    "Outputs": [
+    "TV On",
+    "TV Off",
+    "Channel Changed",
+    "Volume Adjusted"
+    ]
+    },
+    "Thermostat": {
+    "Functionalities": [
+    "Set Temperature",
+    "Turn Off"
+    ],
+    "Outputs": [
+    "Temperature Set",
+    "Thermostat Off"
+    ]
+    },
+    "Light Switch": {
+    "Functionalities": [
+    "Toggle On/Off"
+    ],
+    "Outputs": [
+    "Light Toggled"
+    ]
+    }
+    },
+    "Patio": {
+    "Speaker (with microphone)": {
+    "Functionalities": [
+    "Play Audio",
+    "Stop Audio",
+    "Adjust Volume"
+    ],
+    "Outputs": [
+    "Audio Playing",
+    "Audio Stopped",
+    "Volume Adjusted"
+    ]
+    },
+    "Heater": {
+    "Functionalities": [
+    "Turn On",
+    "Turn Off",
+    "Set Temperature"
+    ],
+    "Outputs": [
+    "Heater On",
+    "Heater Off",
+    "Temperature Set"
+    ]
+    },
+    "Grill": {
+    "Functionalities": [
+    "Start Ignition",
+    "Stop Ignition",
+    "Adjust Temperature"
+    ],
+    "Outputs": [
+    "Grill Ignited",
+    "Grill Off",
+    "Temperature Adjusted"
+    ]
+    },
+    "Outdoor Fridge": {
+    "Functionalities": [
+    "Cool",
+    "Defrost",
+    "Display Temperature"
+    ],
+    "Outputs": [
+    "Cooling Activated",
+    "Defrost Initiated",
+    "Temperature Displayed"
+    ]
+    },
+    "Motion-Activated Camera": {
+    "Functionalities": [
+    "Start Recording",
+    "Stop Recording",
+    "Stream Live Video"
+    ],
+    "Outputs": [
+    "Recording Started",
+    "Recording Stopped",
+    "Live Feed Displayed"
+    ]
+    }
+    },
+    "Whole_House_Systems": {
+    "Central_Thermostat": {
+    "Functionalities": [
+    "Set Global Temperature",
+    "Turn Off Heating/Cooling"
+    ],
+    "Outputs": [
+    "Global Temperature Set",
+    "Climate Control Off"
+    ]
+    },
+    "Security_System": {
+    "Functionalities": [
+    "Activate Alarm",
+    "Deactivate Alarm",
+    "Lock/Unlock Doors"
+    ],
+    "Outputs": [
+    "Security Mode Activated",
+    "Security Mode Deactivated",
+    "Doors Locked/Unlocked"
+    ]
+    },
+    "Lock (for main entry points)": {
+    "Functionalities": [
+    "Lock",
+    "Unlock"
+    ],
+    "Outputs": [
+    "Main Door Locked",
+    "Main Door Unlocked"
+    ]
+    },
+    "Vacuum Cleaner (with navigation camera)": {
+    "Functionalities": [
+    "Start Cleaning",
+    "Stop Cleaning",
+    "Map Layout"
+    ],
+    "Outputs": [
+    "Cleaning Started",
+    "Cleaning Stopped",
+    "Layout Mapped"
+    ]
+    },
+    "Smart Meter": {
+    "Functionalities": [
+    "Measure Energy Usage",
+    "Report Consumption"
+    ],
+    "Outputs": [
+    "Usage Measured",
+    "Consumption Reported"
+    ]
+    }
+    }
+    }
+    }

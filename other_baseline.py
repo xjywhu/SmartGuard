@@ -55,7 +55,12 @@ def get_args_parser():
     return parser
 
 
-def make_data():
+def make_data(args):
+    train_file1 = f"data/{args.dataset}_data/{args.dataset}_trn_instance_10.pkl"
+    train_file2 = f"data/{args.dataset}_data/{args.dataset}_add_trn.pkl"
+    vld_file = f"data/{args.dataset}_data/{args.dataset}_vld_instance_10.pkl"
+    test_file2 = f"data/{args.dataset}_data/{args.dataset}_test_instance_10.pkl"
+    
     with open(train_file1, 'rb') as file1:
         X_trn_r1 = pickle.load(file1)
 
@@ -127,77 +132,63 @@ def count_cm(labels, y_pred_test):
 
 
 def train(args):
-    labels = []
-    y_pred_test = []
     if args.model == "GMM":
-        X_train, X_test_r, X_test_e = make_data()
-        # X_train = X_trn_r + X_trn_e
+        X_train, X_test_r, X_test_e = make_data(args)
         X_test = X_test_r + X_test_e
         labels = [0] * len(X_test_r) + [1] * len(X_test_e)
-
-        model = GaussianMixture(n_components=2, random_state=2023)
         X_test = np.array(X_test)
         X_test = X_test[:, 3:40:4]
-        y_pred_test = model.fit_predict(X_test)
 
+        model = GaussianMixture(n_components=1, covariance_type='full')
+        model.fit(X_test)
+        y_pred_test = model.predict(X_test)
 
     elif args.model == "NB":
-        X_train, X_test_r, X_test_e = make_data()
-        # X_train = X_trn_r + X_trn_e
+        X_train, X_test_r, X_test_e = make_data(args)
         X_test = X_test_r + X_test_e
         labels = [0] * len(X_test_r) + [1] * len(X_test_e)
-        model = GaussianNB()
         X_test = np.array(X_test)
         X_test = X_test[:, 3:40:4]
 
+        model = GaussianNB()
         model.fit(X_test, labels)
-        # y_pred_test = model.predict(X_test)
         y_pred_test = model.predict(X_test)
-        # print(y_pred_test)
-
 
     elif args.model == "LocalOutlierFactor":
-        X_train, X_test_r, X_test_e = make_data()
+        X_train, X_test_r, X_test_e = make_data(args)
         X_test = X_test_r + X_test_e
         labels = [0] * len(X_test_r) + [1] * len(X_test_e)
-        # sp:(n_neighbors=2)
-        model = LocalOutlierFactor(n_neighbors=10, contamination='auto')
         X_test = np.array(X_test)
         X_test = X_test[:, 3:40:4]
+
+        model = LocalOutlierFactor(n_neighbors=20, contamination=0.1)
         y_pred_test = model.fit_predict(X_test)
-        y_pred_test = np.array(y_pred_test)
         y_pred_test[np.where(y_pred_test == 1)] = 0
         y_pred_test[np.where(y_pred_test == -1)] = 1
-
 
     elif args.model == "IsolationForest":
-        X_train, X_test_r, X_test_e = make_data()
+        X_train, X_test_r, X_test_e = make_data(args)
         X_test = X_test_r + X_test_e
         labels = [0] * len(X_test_r) + [1] * len(X_test_e)
-
         X_test = np.array(X_test)
         X_test = X_test[:, 3:40:4]
-        model = IsolationForest(contamination='auto', random_state=2023)
+
+        model = IsolationForest(contamination=0.1, random_state=42)
         y_pred_test = model.fit_predict(X_test)
-        y_pred_test = np.array(y_pred_test)
         y_pred_test[np.where(y_pred_test == 1)] = 0
         y_pred_test[np.where(y_pred_test == -1)] = 1
 
-
     elif args.model == "MC":
-        X_train, X_test_r, X_test_e = make_data()
-        labels = [1] * len(X_test_r) + [-1] * len(X_test_e)
-        X_train = np.array(X_train)
-        X_train = X_train[:, 3:40:4]
-
+        X_train, X_test_r, X_test_e = make_data(args)
         X_test = X_test_r + X_test_e
+        labels = [0] * len(X_test_r) + [1] * len(X_test_e)
         X_test = np.array(X_test)
         X_test = X_test[:, 3:40:4]
 
-        model = MarkovChain(state_number=vocab_dic[args.dataset])
-        model.fit(X_train)
+        model = MarkovChain(vocab_dic[args.dataset])
+        model.fit(X_test)
 
-        threshold = 0.2
+        threshold = 1e-10
         y_pred_test = []
         for sequence in X_test:
             probability = model.predict_sequence_probability(sequence)
@@ -207,8 +198,8 @@ def train(args):
             else:
                 y_pred_test.append(-1)
 
-    elif args.model == "OCSVM":
-        X_train, X_test_r, X_test_e = make_data()
+    elif args.model == "OneClassSVM" or args.model == "OCSVM":
+        X_train, X_test_r, X_test_e = make_data(args)
         X_test = X_test_r + X_test_e
         labels = [0] * len(X_test_r) + [1] * len(X_test_e)
         X_test = np.array(X_test)
@@ -234,22 +225,11 @@ if __name__ == "__main__":
         "DD": ["microwave_attack"]
     }
 
-    models = ["GMM", "NB", "LocalOutlierFactor", "IsolationForest", "MC", "OCSVM"]
-    datasets = ["an", "fr", "sp", "us"]
-    results = []
-
-    for model in models:
-        args.model = model
-        for dataset in datasets:
-            args.dataset = dataset
-            train_file1 = f"data/{args.dataset}_data/{args.dataset}_trn_instance_10.pkl"
-            train_file2 = f"data/{args.dataset}_data/{args.dataset}_add_trn.pkl"
-            vld_file = f"data/{args.dataset}_data/{args.dataset}_vld_instance_10.pkl"
-            test_file2 = f"data/{args.dataset}_data/{args.dataset}_test_instance_10.pkl"
-
-            for attack_type in ["SD", "MD", "DM", "DD"]:
-                args.attack = attack_type
-                res = train(args)
-                tmp = {model: res}
-                results.append(tmp)
-                print(tmp)
+    # Run only for the specified model, dataset, and attack type
+    train_file1 = f"data/{args.dataset}_data/{args.dataset}_trn_instance_10.pkl"
+    train_file2 = f"data/{args.dataset}_data/{args.dataset}_add_trn.pkl"
+    vld_file = f"data/{args.dataset}_data/{args.dataset}_vld_instance_10.pkl"
+    test_file2 = f"data/{args.dataset}_data/{args.dataset}_test_instance_10.pkl"
+    
+    res = train(args)
+    print({args.model: res})
