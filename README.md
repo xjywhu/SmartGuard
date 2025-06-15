@@ -47,7 +47,7 @@ Thanks to the publicly released dataset of [SmartSense](https://github.com/snuda
   title={Make Your Home Safe: Time-aware Unsupervised User Behavior Anomaly Detection in Smart Homes via Loss-guided Mask},
   author={Xiao, Jingyu and Xu, Zhiyao and Zou, Qingsong and Li, Qing and Zhao, Dan and Fang, Dong and Li, Ruoyu and Tang, Wenxin and Li, Kang and Zuo, Xudong and Hu, Penghui and Jiang, Yong and Weng, Zixuan and Lyv.R, Michael},
   booktitle={Proceedings of the 30th ACM SIGKDD Conference on Knowledge Discovery and Data Mining},
-  pages={},
+  pages={3551–3562},
   year={2024}
 }
 ```
