@@ -149,4 +149,4 @@ def time_embedding():
 
 if __name__ == "__main__":
     case()
-    # time_embedding()
+    time_embedding()
